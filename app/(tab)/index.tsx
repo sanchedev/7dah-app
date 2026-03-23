@@ -32,17 +32,6 @@ export default function Screen() {
     },
   })
 
-  const opacityStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      scrollY.value,
-      [0, navHeight],
-      [0, 0.85],
-      Extrapolation.CLAMP,
-    )
-
-    return { opacity }
-  })
-
   const blurStyle = useAnimatedStyle(() => {
     const intensity = interpolate(
       scrollY.value,
