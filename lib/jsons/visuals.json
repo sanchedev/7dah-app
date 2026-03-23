@@ -1,0 +1,462 @@
+[
+  {
+    "id": "01",
+    "range": [1, 21],
+    "theme": "light",
+    "orientation": {
+      "x": -1,
+      "y": -1
+    },
+    "icon": "group"
+  },
+  {
+    "id": "02",
+    "range": [22, 34],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "group"
+  },
+  {
+    "id": "03",
+    "range": [35, 45],
+    "theme": "dark",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "group"
+  },
+  {
+    "id": "04",
+    "range": [46, 47],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "group"
+  },
+  {
+    "id": "05",
+    "range": [48, 52],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "group"
+  },
+  {
+    "id": "06",
+    "range": [53, 59],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "ray-light"
+  },
+  {
+    "id": "07",
+    "range": [60, 77],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": 1
+    },
+    "icon": "ray-light"
+  },
+  {
+    "id": "08",
+    "range": [78, 92],
+    "theme": "dark",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "09",
+    "range": [93, 102],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "10",
+    "range": [103, 106],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "11",
+    "range": [107, 126],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "12",
+    "range": [127, 157],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "13",
+    "range": [158, 189],
+    "theme": "dark",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "cross"
+  },
+  {
+    "id": "14",
+    "range": [190, 203],
+    "theme": "light",
+    "orientation": {
+      "x": -1,
+      "y": 1
+    },
+    "icon": "flame"
+  },
+  {
+    "id": "15",
+    "range": [204, 208],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "bible"
+  },
+  {
+    "id": "16",
+    "range": [209, 237],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "17",
+    "range": [238, 244],
+    "theme": "dark",
+    "orientation": {
+      "x": 1,
+      "y": -1
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "18",
+    "range": [245, 283],
+    "theme": "dark",
+    "orientation": {
+      "x": 1,
+      "y": 1
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "19",
+    "range": [284, 310],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "20",
+    "range": [311, 315],
+    "theme": "dark",
+    "orientation": {
+      "x": 1,
+      "y": 1
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "21",
+    "range": [316, 344],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": -1
+    },
+    "icon": "trumpet"
+  },
+  {
+    "id": "22",
+    "range": [345, 364],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "23",
+    "range": [365, 372],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "24",
+    "range": [373, 390],
+    "theme": "light",
+    "orientation": {
+      "x": -1,
+      "y": 0
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "25",
+    "range": [391, 438],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "26",
+    "range": [439, 465],
+    "theme": "dark",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "27",
+    "range": [466, 473],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "28",
+    "range": [474, 486],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "29",
+    "range": [487, 490],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "30",
+    "range": [491, 504],
+    "theme": "light",
+    "orientation": {
+      "x": -1,
+      "y": 1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "31",
+    "range": [505, 520],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "32",
+    "range": [521, 525],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "33",
+    "range": [526, 527],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": -1
+    },
+    "icon": "cross-heart"
+  },
+  {
+    "id": "34",
+    "range": [528, 533],
+    "theme": "dark",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "church"
+  },
+  {
+    "id": "35",
+    "range": [534, 534],
+    "theme": "light",
+    "orientation": {
+      "x": -1,
+      "y": 0
+    },
+    "icon": "church"
+  },
+  {
+    "id": "36",
+    "range": [535, 550],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "church"
+  },
+  {
+    "id": "37",
+    "range": [551, 578],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "church"
+  },
+  {
+    "id": "38",
+    "range": [579, 580],
+    "theme": "dark",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "church"
+  },
+  {
+    "id": "39",
+    "range": [581, 586],
+    "theme": "light",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "church"
+  },
+  {
+    "id": "40",
+    "range": [587, 587],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "church"
+  },
+  {
+    "id": "41",
+    "range": [588, 588],
+    "theme": "dark",
+    "orientation": {
+      "x": 1,
+      "y": 0
+    },
+    "icon": "church"
+  },
+  {
+    "id": "42",
+    "range": [589, 589],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "home-heart"
+  },
+  {
+    "id": "43",
+    "range": [590, 596],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "home-heart"
+  },
+  {
+    "id": "44",
+    "range": [597, 597],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": 0
+    },
+    "icon": "home-heart"
+  },
+  {
+    "id": "45",
+    "range": [598, 607],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "home-heart"
+  },
+  {
+    "id": "46",
+    "range": [608, 613],
+    "theme": "light",
+    "orientation": {
+      "x": 0,
+      "y": -1
+    },
+    "icon": "home-heart"
+  }
+]

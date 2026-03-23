@@ -33,16 +33,45 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#f9fafb",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#030712"
           }
         }
-      ]
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            {
+              "fontFamily": "Rosario",
+              "fontDefinitions": [
+                {
+                  "path": "./assets/fonts/Rosario-Bold.ttf",
+                  "weight": 700
+                },
+                {
+                  "path": "./assets/fonts/Rosario-Bold.ttf",
+                  "weight": 400
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "expo-image",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4b30d2a7-edb6-4308-983f-e76a9df0877f"
+      }
+    },
+    "owner": "sanchdev"
   }
 }
