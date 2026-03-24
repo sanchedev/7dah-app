@@ -1,6 +1,8 @@
+import { useColors } from '@/hooks/colors'
 import { setupPlayer } from '@/lib/audio/setup'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
+import { StatusBar } from 'expo-status-bar'
 import { useEffect, useState } from 'react'
 
 SplashScreen.preventAutoHideAsync()
@@ -23,11 +25,16 @@ export default function RootLayout() {
     }
   }, [ready, loaded])
 
+  const colors = useColors()
+
   if (!ready || !loaded) return null
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='(tab)' options={{ headerShown: false }} />
-    </Stack>
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='(tab)' options={{ headerShown: false }} />
+      </Stack>
+      <StatusBar style={colors.theme} />
+    </>
   )
 }
