@@ -141,7 +141,7 @@ export default function Screen() {
             },
           ]}>
           <UiText style={{ fontSize: 18, fontFamily: 'RosarioBold' }}>
-            7DAH App
+            7dAH App
           </UiText>
           <IconButton
             iconName='search'

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "7dah-app",
-    "slug": "7dah-app",
+    "slug": "sdah-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sanchdev.x7dahapp"
+      "bundleIdentifier": "com.sanchedev.x7dahapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +19,14 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.sanchdev.x7dahapp"
+      "package": "com.sanchedev.x7dahapp",
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.FOREGROUND_SERVICE_MICROPHONE"
+      ]
     },
     "web": {
       "output": "static",
@@ -59,9 +66,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4b30d2a7-edb6-4308-983f-e76a9df0877f"
+        "projectId": "c4d1fb1d-10c8-4785-a10e-771779fc9cd2"
       }
     },
-    "owner": "sanchdev"
+    "owner": "sanchedev"
   }
 }
