@@ -20,6 +20,7 @@ import {
   Image,
   type ScaledSize,
   ScrollView,
+  Share,
   StyleSheet,
   View,
 } from 'react-native'
@@ -114,7 +115,18 @@ export default function HymnPlayer({ hymn }: HymnPageProps) {
             <IconButton iconName='arrow-back' onPress={() => router.back()} />
             <IconButton
               iconName='share'
-              onPress={() => console.log('Share!')}
+              onPress={() =>
+                Share.share(
+                  {
+                    message: `https://7dah.vercel.app/hymn-${hymn.number.toString().padStart(3, '0')}`,
+                    title: `Himno #${hymn.number.toString().padStart(3, '0')} - ${hymn.title}`,
+                    url: `https://7dah.vercel.app/hymn-${hymn.number.toString().padStart(3, '0')}`,
+                  },
+                  {
+                    dialogTitle: 'Enviar un Himno',
+                  },
+                )
+              }
             />
           </View>
           <View
