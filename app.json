@@ -13,10 +13,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundImage": "./assets/images/android-icon-background.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.sanchedev.x7dahapp",
@@ -41,6 +39,7 @@
           "resizeMode": "cover",
           "backgroundColor": "#f9fafb",
           "dark": {
+            "image": "./assets/images/dark-splash-icon.png",
             "backgroundColor": "#030712"
           }
         }
