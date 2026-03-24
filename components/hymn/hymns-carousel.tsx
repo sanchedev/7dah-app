@@ -36,7 +36,7 @@ export function HymnCarousel({
 
   const { left, right } = useSafeAreaInsets()
 
-  const cardPadd = cardSize - 32 - cardSize / 8
+  const cardPadd = cardSize - 32 - cardSize / 4
 
   useEffect(() => {
     const onResize = (dimensions: { window: ScaledSize }) => {
@@ -61,9 +61,9 @@ export function HymnCarousel({
       pagingEnabled
       decelerationRate='fast'
       {...props}>
-      {hymns.slice(0, 4).map((hymn) => (
+      {hymns.slice(0, 4).map((hymn, index) => (
         <HymnCard
-          key={`Hymn-card-${hymn.number}`}
+          key={`Hymn-card-${hymn.number}-${index}`}
           hymn={hymn}
           size={cardPadd}
           action={action}

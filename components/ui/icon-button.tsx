@@ -14,25 +14,29 @@ const sizes: Record<IconSize, number> = {
   xs: 8,
   sm: 16,
   md: 24,
-  lg: 32,
-  xl: 40,
+  lg: 36,
+  xl: 48,
 }
 
 export function IconButton({
   iconName,
   filled,
   iconSize = 'md',
+  disabled,
   ...props
 }: IconButtonProps) {
   const colors = useColors()
 
   return (
-    <Pressable {...props}>
+    <Pressable disabled={disabled} {...props}>
       {({ pressed }) => (
         <View
           style={[
             {
               padding: 8,
+            },
+            disabled && {
+              opacity: 0.5,
             },
             pressed && {
               borderRadius: '100%',

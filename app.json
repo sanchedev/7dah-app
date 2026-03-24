@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "7dahapp",
+    "scheme": "sdah",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sanchdev.x7dahapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,8 +18,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.sanchdev.x7dahapp"
     },
     "web": {
       "output": "static",
@@ -39,28 +39,18 @@
           }
         }
       ],
-      [
-        "expo-font",
-        {
-          "fonts": [
-            {
-              "fontFamily": "Rosario",
-              "fontDefinitions": [
-                {
-                  "path": "./assets/fonts/Rosario-Bold.ttf",
-                  "weight": 700
-                },
-                {
-                  "path": "./assets/fonts/Rosario-Bold.ttf",
-                  "weight": 400
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      "expo-font",
       "expo-image",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

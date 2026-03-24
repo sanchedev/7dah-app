@@ -2,14 +2,9 @@ import { HymnList } from '@/components/hymn/hymn-list'
 import { IconButton } from '@/components/ui/icon-button'
 import { useColors } from '@/hooks/colors'
 import { hymns } from '@/lib/hymns'
-import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const NAV_HEIGHT = 72
@@ -17,15 +12,6 @@ const NAV_HEIGHT = 72
 export default function SearchScreen() {
   const { top, bottom } = useSafeAreaInsets()
   const navHeight = NAV_HEIGHT + top
-
-  const scrollY = useSharedValue(0)
-
-  const handler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      const y = event.contentOffset.y
-      scrollY.value = y
-    },
-  })
 
   const colors = useColors()
   const router = useRouter()
@@ -51,11 +37,10 @@ export default function SearchScreen() {
           paddingTop: navHeight + 16,
           paddingBottom: bottom,
         }}
-        onScroll={handler}
         scrollEventThrottle={16}
       />
 
-      <Animated.View
+      <View
         style={[
           {
             position: 'absolute',
@@ -68,14 +53,11 @@ export default function SearchScreen() {
             paddingHorizontal: 16,
           },
         ]}>
-        <Animated.View style={[{ ...StyleSheet.absoluteFillObject }]}>
-          <BlurView intensity={75} tint={colors.theme} style={{ flex: 1 }} />
-        </Animated.View>
-        <Animated.View
+        <View
           style={[
             {
-              ...StyleSheet.absoluteFillObject,
-              backgroundColor: colors.background + '44',
+              ...StyleSheet.absoluteFill,
+              backgroundColor: colors.background + 'ee',
             },
           ]}
         />
@@ -91,12 +73,14 @@ export default function SearchScreen() {
           <IconButton iconName='arrow-back' onPress={() => router.back()} />
           <TextInput
             placeholder='Buscar...'
+            autoFocus
+            keyboardType='default'
             style={{ color: colors.text, flex: 1 }}
             placeholderTextColor={colors.text + '88'}
             onChangeText={setSearch}
           />
         </View>
-      </Animated.View>
+      </View>
     </View>
   )
 }

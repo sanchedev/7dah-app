@@ -1,4 +1,4 @@
-import HymnPage from '@/components/hymn-page'
+import HymnPlayer from '@/components/hymn/hymn-player'
 import { useColors } from '@/hooks/colors'
 import { hymns } from '@/lib/hymns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -30,7 +30,7 @@ export default function HymnScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <HymnPage hymn={hymnObj} />
+      <HymnPlayer hymn={hymnObj} />
     </View>
   )
 }

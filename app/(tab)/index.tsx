@@ -2,6 +2,7 @@ import { HymnItem } from '@/components/hymn/hymn-item'
 import { HymnCarousel } from '@/components/hymn/hymns-carousel'
 import { IconButton } from '@/components/ui/icon-button'
 import { UiText } from '@/components/ui/text'
+import { useAudioHistory } from '@/hooks/audio-hooks'
 import { useColors } from '@/hooks/colors'
 import { hymns } from '@/lib/hymns'
 import { BlurTargetView, BlurView } from 'expo-blur'
@@ -50,6 +51,8 @@ export default function Screen() {
   const router = useRouter()
   const targetRef = useRef<View | null>(null)
 
+  const history = useAudioHistory()
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <BlurTargetView ref={targetRef}>
@@ -61,19 +64,23 @@ export default function Screen() {
           }}
           onScroll={handler}
           scrollEventThrottle={16}>
+          {history.length > 0 && (
+            <>
+              <UiText
+                style={{ marginHorizontal: 16, marginBottom: 4 }}
+                variant='subtitle'>
+                Escuchados Recientemente
+              </UiText>
+              <HymnCarousel
+                hymns={history.toReversed().map((h) => hymns[h - 1])}
+                style={{ marginBottom: 16 }}
+              />
+            </>
+          )}
           <UiText
             style={{ marginHorizontal: 16, marginBottom: 4 }}
             variant='subtitle'>
-            Vistos Recientemente
-          </UiText>
-          <HymnCarousel
-            hymns={hymns.slice(0, 10)}
-            style={{ marginBottom: 16 }}
-          />
-          <UiText
-            style={{ marginHorizontal: 16, marginBottom: 4 }}
-            variant='subtitle'>
-            Todos los Himnos
+            Algunos Himnos
           </UiText>
           {hymns.slice(0, 40).map((hymn, index) => (
             <Fragment key={`Hymn-${hymn.number}`}>
@@ -133,7 +140,9 @@ export default function Screen() {
               alignItems: 'center',
             },
           ]}>
-          <UiText style={{ fontSize: 18, fontWeight: '700' }}>7DAH App</UiText>
+          <UiText style={{ fontSize: 18, fontFamily: 'RosarioBold' }}>
+            7DAH App
+          </UiText>
           <IconButton
             iconName='search'
             onPress={() => router.push('/search')}

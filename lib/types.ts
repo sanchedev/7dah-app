@@ -13,12 +13,12 @@ export interface Lyric {
 }
 
 export interface Visual {
-  id: '01'
+  id: string
   range: [number, number]
   theme: 'light' | 'dark'
   orientation: {
     x: number
     y: number
   }
-  icon: 'group'
+  icon: string
 }
