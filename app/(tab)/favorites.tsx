@@ -62,6 +62,7 @@ export default function FavoritesScreen() {
               paddingLeft: insets.left,
               paddingRight: insets.right,
             }}
+            onScroll={handler}
             action={FavoriteBtn}
           />
         </BlurTargetView>
