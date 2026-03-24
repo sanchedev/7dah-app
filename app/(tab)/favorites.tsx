@@ -53,17 +53,25 @@ export default function FavoritesScreen() {
 
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
-      <BlurTargetView ref={targetRef}>
-        <AnimatedHymnList
-          hymns={[...favorites].map((f) => hymns[f - 1])}
-          contentContainerStyle={{
-            paddingTop: navHeight + 16,
-            paddingLeft: insets.left,
-            paddingRight: insets.right,
-          }}
-          action={FavoriteBtn}
-        />
-      </BlurTargetView>
+      {favorites.size > 0 && (
+        <BlurTargetView ref={targetRef}>
+          <AnimatedHymnList
+            hymns={[...favorites].map((f) => hymns[f - 1])}
+            contentContainerStyle={{
+              paddingTop: navHeight + 16,
+              paddingLeft: insets.left,
+              paddingRight: insets.right,
+            }}
+            action={FavoriteBtn}
+          />
+        </BlurTargetView>
+      )}
+      {favorites.size < 1 && (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <UiText variant='special'>No tienes Favoritos</UiText>
+        </View>
+      )}
       <Animated.View
         style={[
           {
