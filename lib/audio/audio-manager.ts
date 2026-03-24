@@ -92,16 +92,17 @@ export class AudioManager {
 
     if (queue[this.#currentIndex].number === this.#history.at(-1)) return
 
-    this.#history = this.#history.filter(
-      (h) => h !== queue[this.#currentIndex].number,
-    )
+    const history = [
+      ...this.#history.filter((h) => h !== queue[this.#currentIndex].number),
+      queue[this.#currentIndex].number,
+    ].reverse()
 
-    this.#history.push(queue[this.#currentIndex].number)
+    if (history.length > 15) history.length = 15
 
-    if (this.#history.length > 15) this.#history.length = 15
+    this.#history = history.reverse()
 
-    saveHistory(this.#history)
-    this.#emit('historyChange', [...this.#history])
+    saveHistory(history)
+    this.#emit('historyChange', [...history])
   }
   static pause() {
     audioPlayer.pause()

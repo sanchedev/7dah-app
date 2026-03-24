@@ -61,7 +61,7 @@ export function HymnCarousel({
       pagingEnabled
       decelerationRate='fast'
       {...props}>
-      {hymns.slice(0, 4).map((hymn, index) => (
+      {hymns.map((hymn, index) => (
         <HymnCard
           key={`Hymn-card-${hymn.number}-${index}`}
           hymn={hymn}
