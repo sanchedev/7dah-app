@@ -38,8 +38,8 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
+          "imageWidth": 256,
+          "resizeMode": "cover",
           "backgroundColor": "#f9fafb",
           "dark": {
             "backgroundColor": "#030712"
@@ -57,7 +57,8 @@
           "enableBackgroundPlayback": true,
           "enableBackgroundRecording": true
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true,
