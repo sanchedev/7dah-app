@@ -1,4 +1,4 @@
-import HymnPlayer from '@/components/hymn/hymn-player'
+import HymnPlayer from '@/components/hymn/player/player'
 import { useColors } from '@/hooks/colors'
 import { hymns } from '@/lib/hymns'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -8,7 +8,10 @@ const regex = /^\d{3}$/
 
 export default function HymnScreen() {
   const colors = useColors()
-  const { hymn } = useLocalSearchParams()
+  const { hymn, playlistId } = useLocalSearchParams<{
+    hymn: string
+    playlistId?: string
+  }>()
 
   const router = useRouter()
 
@@ -30,7 +33,7 @@ export default function HymnScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <HymnPlayer hymn={hymnObj} />
+      <HymnPlayer hymn={hymnObj} playlistId={playlistId} />
     </View>
   )
 }

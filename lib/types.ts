@@ -3,6 +3,7 @@ export interface Hymn {
   title: string
   lyrics: Lyric[]
   verseAssociated?: string
+  duration: number
 }
 
 export interface Lyric {

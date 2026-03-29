@@ -1,27 +1,24 @@
+import { ColorTheme } from '@/constants/theme'
 import { useColors } from '@/hooks/colors'
-import { MaterialIcons } from '@expo/vector-icons'
 import { Pressable, PressableProps, View } from 'react-native'
+import { Icon, IconProps } from './icon'
 
 export interface IconButtonProps extends PressableProps {
-  iconName: ConstructorParameters<typeof MaterialIcons>[0]['name']
+  iconName: IconProps['name']
+  iconSize?: IconProps['iconSize']
+  iconColor?: keyof ColorTheme
+  color?: keyof ColorTheme
+  hover?: keyof ColorTheme
   filled?: boolean
-  iconSize?: IconSize
-}
-
-type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
-const sizes: Record<IconSize, number> = {
-  xs: 8,
-  sm: 16,
-  md: 24,
-  lg: 36,
-  xl: 48,
 }
 
 export function IconButton({
   iconName,
   filled,
   iconSize = 'md',
+  iconColor,
+  color,
+  hover,
   disabled,
   ...props
 }: IconButtonProps) {
@@ -40,21 +37,25 @@ export function IconButton({
             },
             pressed && {
               borderRadius: '100%',
-              backgroundColor: colors.hoverBg,
+              backgroundColor:
+                hover != null ? colors[hover] + 'aa' : colors.hoverBackground,
             },
             filled && {
               borderRadius: '100%',
-              backgroundColor: colors.text,
+              backgroundColor: colors[color ?? 'primaryBackground'],
             },
             filled &&
               pressed && {
-                backgroundColor: colors.text + 'aa',
+                backgroundColor:
+                  hover != null
+                    ? colors[hover] + 'aa'
+                    : colors.primaryBackground,
               },
           ]}>
-          <MaterialIcons
+          <Icon
             name={iconName}
-            size={sizes[iconSize]}
-            style={{ color: !filled ? colors.text : colors.background }}
+            iconSize={iconSize}
+            color={iconColor ?? (filled ? 'primaryForeground' : 'foreground')}
           />
         </View>
       )}

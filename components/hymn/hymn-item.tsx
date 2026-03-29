@@ -9,12 +9,19 @@ import { UiText } from '../ui/text'
 
 interface HymnItemProps {
   hymn: Hymn
+  playlistId?: string
   action?: ({ hymn }: { hymn: Hymn }) => React.ReactNode
+  onPrevPress?: () => void
 }
 
 const ITEM_HEIGHT = 64
 
-export function HymnItem({ hymn, action: Action }: HymnItemProps) {
+export function HymnItem({
+  hymn,
+  playlistId,
+  action: Action,
+  onPrevPress,
+}: HymnItemProps) {
   const visual = getVisualFromHymn(hymn.number)!
   const visualAsset = getVisualAsset(visual.id)!
 
@@ -25,12 +32,16 @@ export function HymnItem({ hymn, action: Action }: HymnItemProps) {
 
   return (
     <Pressable
-      onPress={() =>
+      onPress={() => {
+        onPrevPress?.()
         router.navigate({
-          pathname: '/hymns/[hymn]',
-          params: { hymn: hymn.number.toString().padStart(3, '0') },
+          pathname: '/hymns/[hymn]?playlistId=[playlistId]',
+          params: {
+            hymn: hymn.number.toString().padStart(3, '0'),
+            playlistId,
+          },
         })
-      }>
+      }}>
       {({ pressed }) => (
         <Animated.View
           style={[
@@ -46,7 +57,7 @@ export function HymnItem({ hymn, action: Action }: HymnItemProps) {
               transition: 'all 100ms',
             },
             pressed && {
-              backgroundColor: colors.hoverBg,
+              backgroundColor: colors.hoverBackground,
               borderRadius: 8,
             },
           ]}>
@@ -64,7 +75,9 @@ export function HymnItem({ hymn, action: Action }: HymnItemProps) {
               justifyContent: 'center',
               flex: 1,
             }}>
-            <UiText style={{ fontSize: 16 }}>{hymn.title}</UiText>
+            <UiText style={{ fontSize: 16 }} numberOfLines={1}>
+              {hymn.title}
+            </UiText>
             <UiText style={{ opacity: 0.5, fontSize: 12 }}>
               Himno #{hymn.number.toString().padStart(3, '0')}
             </UiText>

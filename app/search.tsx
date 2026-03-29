@@ -75,8 +75,8 @@ export default function SearchScreen() {
             placeholder='Buscar...'
             autoFocus
             keyboardType='default'
-            style={{ color: colors.text, flex: 1 }}
-            placeholderTextColor={colors.text + '88'}
+            style={{ color: colors.foreground, flex: 1 }}
+            placeholderTextColor={colors.foreground + '88'}
             onChangeText={setSearch}
           />
         </View>

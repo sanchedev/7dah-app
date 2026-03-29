@@ -106,7 +106,7 @@ function HymnCard({
               transition: 'all 100ms',
             },
             pressed && {
-              backgroundColor: colors.hoverBg,
+              backgroundColor: colors.hoverBackground,
               borderRadius: 16,
             },
           ]}>

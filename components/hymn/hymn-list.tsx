@@ -1,8 +1,7 @@
-import { useColors } from '@/hooks/colors'
 import { Hymn } from '@/lib/types'
 import { FlashList, FlashListProps } from '@shopify/flash-list'
-import { View } from 'react-native'
 import Animated, { AnimatedProps } from 'react-native-reanimated'
+import { ItemSeparator } from '../ui/list-item'
 import { HymnItem } from './hymn-item'
 
 export interface HymnListProps extends Omit<
@@ -14,23 +13,11 @@ export interface HymnListProps extends Omit<
 }
 
 export function HymnList({ hymns, action, ...props }: HymnListProps) {
-  const colors = useColors()
-
   return (
     <FlashList<Hymn>
       {...(props as any)}
       data={hymns}
-      ItemSeparatorComponent={() => (
-        <View
-          style={{
-            backgroundColor: colors.text,
-            opacity: 0.1,
-            width: '100%',
-            height: 1,
-            marginHorizontal: 8,
-          }}
-        />
-      )}
+      ItemSeparatorComponent={ItemSeparator}
       keyExtractor={({ number, title }) => `${number}-"${title}"`}
       renderItem={({ item }) => <HymnItem hymn={item} action={action} />}
     />
@@ -38,23 +25,11 @@ export function HymnList({ hymns, action, ...props }: HymnListProps) {
 }
 
 export function AnimatedHymnList({ hymns, action, ...props }: HymnListProps) {
-  const colors = useColors()
-
   return (
     <Animated.FlatList
       {...(props as any)}
       data={hymns}
-      ItemSeparatorComponent={() => (
-        <View
-          style={{
-            backgroundColor: colors.text,
-            opacity: 0.1,
-            width: '100%',
-            height: 1,
-            marginHorizontal: 8,
-          }}
-        />
-      )}
+      ItemSeparatorComponent={ItemSeparator}
       keyExtractor={({ number, title }) => `${number}-"${title}"`}
       renderItem={({ item }) => <HymnItem hymn={item} action={action} />}
     />

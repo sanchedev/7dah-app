@@ -12,7 +12,6 @@ const KEYS = {
 const favoritesSchema = z.array(z.number().int().min(0).max(613))
 
 export async function saveFavorites(favorites: number[]): Promise<number[]> {
-  console.log(favorites)
   await AsyncStorage.setItem(KEYS.FAVORITES, JSON.stringify(favorites))
   return favorites
 }
