@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1024" height="1024" color="#e5e7eb">
+  <!-- <rect x="0" y="0" width="24" height="24" rx="8" fill="#374151" /> -->
+  <path d="M12 15.5c.3.9-.3 2.2-2.2 2.9s-3.2 0-3.5-.9.3-2.2 2.2-2.9 3.2 0 3.5.9z" fill="currentColor" />
+  <path
+    d="M12 15.5l-2.3-8.7c-.3-1-1.2-.7-1 .3l2.3 8.7zm-1.25-8c1-3 4 0 5-3 1 4-4 1-5 3zm.9 3c1-3 4 0 5.5-3 .75 4-4 1-5.5 3zm.8 3c1-3 4 0 6-3 .75 4-4 1-6 3z"
+    fill="currentColor" />
+</svg>
