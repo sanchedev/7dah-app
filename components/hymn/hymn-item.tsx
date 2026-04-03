@@ -1,92 +1,49 @@
-import { useColors } from '@/hooks/colors'
-import { Hymn } from '@/lib/types'
-import { getVisualAsset, getVisualFromHymn } from '@/lib/visuals'
-import { useRouter } from 'expo-router'
-import { Image, Pressable, View } from 'react-native'
-import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { UiText } from '../ui/text'
+import { useHymn } from '@/hooks/hymn/hymn'
+import { useVisualFromHymnId } from '@/hooks/visuals/visual'
+import { goToHymn } from '@/lib/hymns/link'
+import { Image } from 'react-native'
+import { ListItem, ListItemProps } from '../ui/list-item'
+import { HymnAction } from './types'
 
-interface HymnItemProps {
-  hymn: Hymn
+interface HymnItemProps extends Omit<
+  ListItemProps,
+  'leadingComp' | 'title' | 'subtitle' | 'trailingComp'
+> {
+  hymnId: string
   playlistId?: string
-  action?: ({ hymn }: { hymn: Hymn }) => React.ReactNode
+  trailingComp?: HymnAction
   onPrevPress?: () => void
 }
 
-const ITEM_HEIGHT = 64
-
 export function HymnItem({
-  hymn,
+  hymnId,
   playlistId,
-  action: Action,
+  trailingComp: TrailingComp,
   onPrevPress,
+  ...props
 }: HymnItemProps) {
-  const visual = getVisualFromHymn(hymn.number)!
-  const visualAsset = getVisualAsset(visual.id)!
-
-  const { left, right } = useSafeAreaInsets()
-
-  const colors = useColors()
-  const router = useRouter()
+  const hymn = useHymn(hymnId)
+  const visual = useVisualFromHymnId(hymnId)
 
   return (
-    <Pressable
-      onPress={() => {
-        onPrevPress?.()
-        router.navigate({
-          pathname: '/hymns/[hymn]?playlistId=[playlistId]',
-          params: {
-            hymn: hymn.number.toString().padStart(3, '0'),
-            playlistId,
-          },
-        })
-      }}>
-      {({ pressed }) => (
-        <Animated.View
-          style={[
-            {
-              flexDirection: 'row',
-              height: ITEM_HEIGHT + 16,
-              marginLeft: 8 + left,
-              marginRight: 8 + right,
-              paddingLeft: 8,
-              paddingRight: 8,
-              paddingVertical: 8,
-              gap: 16,
-              transition: 'all 100ms',
-            },
-            pressed && {
-              backgroundColor: colors.hoverBackground,
-              borderRadius: 8,
-            },
-          ]}>
-          <Image
-            source={visualAsset}
-            style={{ width: ITEM_HEIGHT, height: ITEM_HEIGHT }}
-            width={ITEM_HEIGHT}
-            height={ITEM_HEIGHT}
-            borderRadius={4}
-          />
-          <View
-            style={{
-              flexDirection: 'column',
-              gap: 4,
-              justifyContent: 'center',
-              flex: 1,
-            }}>
-            <UiText style={{ fontSize: 16 }} numberOfLines={1}>
-              {hymn.title}
-            </UiText>
-            <UiText style={{ opacity: 0.5, fontSize: 12 }}>
-              Himno #{hymn.number.toString().padStart(3, '0')}
-            </UiText>
-          </View>
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            {Action && <Action hymn={hymn} />}
-          </View>
-        </Animated.View>
+    <ListItem
+      leadingComp={() => (
+        <Image
+          source={{ uri: visual?.url }}
+          style={{ flex: 1, aspectRatio: 1 }}
+          borderRadius={4}
+        />
       )}
-    </Pressable>
+      title={hymn?.title ?? ''}
+      subtitle={`Himno #${hymn?.id.toUpperCase()}`}
+      onPress={() => {
+        goToHymn(hymnId, playlistId)
+      }}
+      trailingComp={() =>
+        hymn &&
+        TrailingComp && <TrailingComp hymn={hymn} playlistId={playlistId} />
+      }
+      {...props}
+    />
   )
 }

@@ -1,5 +1,6 @@
 import { useColors } from '@/hooks/colors'
 import { setupPlayer } from '@/lib/audio/setup'
+import { BottomSheetProvider } from '@/providers/bottom-sheet'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -32,10 +33,15 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name='(tab)' options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style={colors.theme === 'dark' ? 'light' : 'dark'} animated />
+      <BottomSheetProvider>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name='(tab)' options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar
+          style={colors.theme === 'dark' ? 'light' : 'dark'}
+          animated
+        />
+      </BottomSheetProvider>
     </GestureHandlerRootView>
   )
 }

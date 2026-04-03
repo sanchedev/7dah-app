@@ -1,22 +1,30 @@
+import {
+  useBottomSheet,
+  useBottomSheetCloseOnNavigate,
+} from '@/hooks/bottom-sheet'
+import { useVisual } from '@/hooks/visuals/visual'
 import { Current } from '@/lib/audio/current'
 import { Playlists } from '@/lib/audio/playlists'
 import { Playlist } from '@/lib/audio/types'
-import { Hymn } from '@/lib/types'
-import {
-  getVisualAsset,
-  getVisualFromHymn,
-  getVisualFromId,
-} from '@/lib/visuals'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
-import { Dimensions, Image, ScaledSize, ScrollView, View } from 'react-native'
+import {
+  Alert,
+  Dimensions,
+  Image,
+  ScaledSize,
+  ScrollView,
+  View,
+} from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LoopButton } from '../audio/loop-button'
 import { PlayPauseButton } from '../audio/play-button'
 import { ShuffleButton } from '../audio/shuffle-button'
 import VisualBackground from '../hymn/hymn-background'
 import { CardView } from '../ui/card'
+import { Icon } from '../ui/icon'
 import { IconButton } from '../ui/icon-button'
+import { ListItem } from '../ui/list-item'
 import { UiText } from '../ui/text'
 import { DraggablePlaylist } from './draggable-playlist'
 
@@ -30,8 +38,7 @@ const getSize = ({ window }: { window?: ScaledSize } = {}) => {
 }
 
 export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
-  const visual = getVisualFromId(playlist.visualId) ?? getVisualFromHymn(1)!
-  const visualAsset = getVisualAsset(visual.id)!
+  const visual = useVisual(playlist.visualId)
 
   const insets = useSafeAreaInsets()
   const router = useRouter()
@@ -62,7 +69,54 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
   function handleDrop(from: number, to: number) {
     if (from !== to) {
       Playlists.addHymn(playlist.id, playlist.hymns[from], to)
+      setOrder(playlist.hymns.map((_, i) => i))
     }
+  }
+
+  useEffect(() => {
+    if (playlist.hymns.length !== order.length) {
+      setOrder(playlist.hymns.map((_, i) => i))
+    }
+  }, [playlist.hymns])
+
+  useBottomSheetCloseOnNavigate()
+
+  const modal = useBottomSheet()
+
+  const handleMenu = () => {
+    modal.openSheet([
+      {
+        id: 'delete-playlist',
+        comp: ListItem,
+        props: {
+          leadingComp: () => <Icon name='delete' />,
+          title: 'Borrar Playlist',
+          subtitle: 'Acción irreversible',
+          onPress: () =>
+            Alert.alert(
+              '¿Seguro(a) de Eliminar esta Playlist?',
+              'Esta acción es irreversible.',
+              [
+                {
+                  style: 'destructive',
+                  text: 'Eliminar',
+                  onPress: () => {
+                    modal.closeSheet()
+                    router.back()
+                    Playlists.delete(playlist.id)
+                  },
+                },
+                {
+                  style: 'cancel',
+                  text: 'Cancelar',
+                  isPreferred: true,
+                  onPress: () => modal.closeSheet(),
+                },
+              ],
+            ),
+        },
+      },
+    ])
   }
 
   return (
@@ -82,6 +136,9 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
             justifyContent: 'space-between',
           }}>
           <IconButton iconName='arrow-back' onPress={() => router.back()} />
+          {playlist.id !== 'favorites' && (
+            <IconButton iconName='menu' onPress={handleMenu} />
+          )}
         </View>
         <View
           style={{
@@ -91,7 +148,7 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
             marginVertical: 16,
           }}>
           <Image
-            source={visualAsset}
+            source={{ uri: visual?.url }}
             style={{ aspectRatio: 1 }}
             width={cardPadd}
             height={cardPadd}
@@ -130,7 +187,7 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
           <ShuffleButton iconSize='md' />
           <LoopButton iconSize='md' />
         </View>
-        <CardView style={{ padding: 8, paddingHorizontal: 0 }}>
+        <CardView style={{ padding: 8 }}>
           {playlist.hymns.length === 0 && (
             <View
               style={{
@@ -144,15 +201,15 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
             </View>
           )}
           {order.map((i, index) => {
-            const hymn = playlist.hymns[i]
+            const hymnId = playlist.hymns[i]
 
             return (
               <DraggablePlaylist
-                key={hymn.number}
-                hymn={hymn}
+                key={hymnId}
+                hymnId={hymnId}
                 index={index}
                 action={() => (
-                  <PlayPauseAction hymn={hymn} playlist={playlist} />
+                  <PlayPauseAction hymnId={hymnId} playlist={playlist} />
                 )}
                 playlistId={playlist.id}
                 move={moveItem}
@@ -183,16 +240,16 @@ function PlayPauseBtn({ playlist }: { playlist: Playlist }) {
 
 function PlayPauseAction({
   playlist,
-  hymn,
+  hymnId,
 }: {
   playlist: Playlist
-  hymn: Hymn
+  hymnId: string
 }) {
   return (
     <PlayPauseButton
       info={{
         playlistId: playlist.id,
-        index: Current.indexOf(hymn.number, playlist.id),
+        index: Current.indexOf(hymnId, playlist.id),
       }}
     />
   )

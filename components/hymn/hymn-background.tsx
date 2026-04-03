@@ -1,9 +1,8 @@
 import { useColors } from '@/hooks/colors'
-import { getVisualAsset } from '@/lib/visuals'
+import { useVisual } from '@/hooks/visuals/visual'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { useRef } from 'react'
 import { Image, StyleSheet, View, ViewProps } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface HymnBackgroundProps extends ViewProps {
   visualId: string
@@ -14,15 +13,13 @@ export default function VisualBackground({
   style,
   ...props
 }: HymnBackgroundProps) {
-  const visualAsset = getVisualAsset(visualId)!
+  const visual = useVisual(visualId)!
 
   const targetRef = useRef<View | null>(null)
   const colors = useColors()
 
-  const insets = useSafeAreaInsets()
-
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={{ flex: 1 }}>
       <BlurTargetView
         ref={targetRef}
         style={{
@@ -30,7 +27,7 @@ export default function VisualBackground({
           flexWrap: 'wrap',
           ...StyleSheet.absoluteFill,
         }}>
-        <Image source={visualAsset} width={1024} height={1024} />
+        <Image source={{ uri: visual.url }} width={1024} height={1024} />
         <View
           style={[
             StyleSheet.absoluteFill,

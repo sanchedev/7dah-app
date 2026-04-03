@@ -8,14 +8,16 @@ export function usePlaylist(playlistId: string | null) {
   )
 
   useEffect(() => {
-    if ((playlist?.id ?? null) === playlistId) {
+    if ((playlist?.id ?? null) !== playlistId) {
       setPlaylist(
         playlistId != null ? (Playlists.get(playlistId) ?? null) : null,
       )
     }
 
     const handleEdit = (p: Playlist | undefined) => {
-      setPlaylist(playlist ?? null)
+      if ((p?.id ?? null) !== playlistId) return
+
+      setPlaylist(p ?? null)
     }
 
     Playlists.playlistEdited.on(handleEdit)

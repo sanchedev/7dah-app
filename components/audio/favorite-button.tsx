@@ -3,16 +3,16 @@ import { Favorites } from '@/lib/audio/favorites'
 import { IconButton, IconButtonProps } from '../ui/icon-button'
 
 interface FavoriteButtonProps extends Omit<IconButtonProps, 'iconName'> {
-  hymnNumber: number
+  hymnId: string
 }
 
 export function FavoriteButton({
-  hymnNumber,
+  hymnId,
   onPress,
   ...props
 }: FavoriteButtonProps) {
   const favorites = useFavorites()
-  const isFavorite = favorites.has(hymnNumber)
+  const isFavorite = favorites.includes(hymnId)
 
   return (
     <IconButton
@@ -20,7 +20,7 @@ export function FavoriteButton({
       iconColor='secondaryForeground'
       onPress={(ev) => {
         onPress?.(ev)
-        Favorites.toggle(hymnNumber)
+        Favorites.toggle(hymnId)
       }}
       {...props}
     />

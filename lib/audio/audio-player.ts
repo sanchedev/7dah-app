@@ -14,10 +14,10 @@ export class PlayerManager {
 
   static killPlayer() {
     if (player != null) {
-      player.clearLockScreenControls()
       player.removeAllListeners('audioSampleUpdate')
       player.removeAllListeners('playbackStatusUpdate')
       player.pause()
+      player.clearLockScreenControls()
       player.remove()
       player = null
     }

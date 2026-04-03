@@ -145,7 +145,7 @@ export function BottomSheet({ visible, onClose, children }: Props) {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
               overflow: 'hidden',
-              zIndex: 10,
+              zIndex: 100,
             },
             sheetStyle,
           ]}>

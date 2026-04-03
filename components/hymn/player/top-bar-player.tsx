@@ -3,7 +3,7 @@ import { IconButton } from '@/components/ui/icon-button'
 import { UiText } from '@/components/ui/text'
 import { useColors } from '@/hooks/colors'
 import { Playlist } from '@/lib/audio/types'
-import { Hymn } from '@/lib/types'
+import { Hymn } from '@/lib/hymns/types'
 import { useRouter } from 'expo-router'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -29,7 +29,7 @@ export function TopBarPlayer({ hymn, playlist }: TopBarPlayerProps) {
       }}>
       <IconButton iconName='arrow-back' onPress={() => router.back()} />
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        {playlist?.hymns.some((h) => h.number === hymn.number) && (
+        {playlist?.hymns.includes(hymn.id) && (
           <UiText
             style={{ textAlign: 'center', color: colors.foreground + '88' }}
             variant='h3'>
@@ -37,7 +37,7 @@ export function TopBarPlayer({ hymn, playlist }: TopBarPlayerProps) {
           </UiText>
         )}
       </View>
-      <FavoriteButton hymnNumber={hymn.number} />
+      <FavoriteButton hymnId={hymn.id} />
     </View>
   )
 }

@@ -1,15 +1,20 @@
-import { HymnItem } from '@/components/hymn/hymn-item'
+import { CategoryCard } from '@/components/category/category-card'
 import { HymnCarousel } from '@/components/hymn/hymns-carousel'
-import { NavBarContainer } from '@/components/nav-bar-container'
+import {
+  NavBarContainer,
+  ScrollComponentProps,
+} from '@/components/nav-bar-container'
 import { IconButton } from '@/components/ui/icon-button'
 import { UiText } from '@/components/ui/text'
+import { useFavorites } from '@/hooks/audio/favorites'
 import { useHistory } from '@/hooks/audio/history'
+import { usePlaylists } from '@/hooks/audio/playlists'
 import { useColors } from '@/hooks/colors'
-import { hymns } from '@/lib/hymns'
-import { useRouter } from 'expo-router'
-import React, { Fragment } from 'react'
-import { View } from 'react-native'
-import Animated, { ScrollHandlerProcessed } from 'react-native-reanimated'
+import { Categories } from '@/lib/categories/categories'
+import { FlashList } from '@shopify/flash-list'
+import { router } from 'expo-router'
+import React from 'react'
+import Animated from 'react-native-reanimated'
 
 export default function Screen() {
   return (
@@ -21,61 +26,149 @@ export default function Screen() {
   )
 }
 
-function ScrollComponent(props: {
-  paddingTop: number
-  scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>
-}) {
+function ScrollComponent(props: ScrollComponentProps) {
   const colors = useColors()
   const history = useHistory()
+  const favorites = useFavorites()
+  const playlists = usePlaylists()
 
   return (
-    <Animated.ScrollView
-      contentContainerStyle={{
-        paddingTop: props.paddingTop,
-        backgroundColor: colors.background,
-      }}
+    <Animated.FlatList<CarouselList>
+      contentContainerStyle={[
+        props.style,
+        {
+          backgroundColor: colors.background,
+          paddingBottom: 128,
+        },
+      ]}
       onScroll={props.scrollHandler}
-      scrollEventThrottle={16}>
-      {history.length > 0 && (
-        <>
+      scrollEventThrottle={16}
+      data={[
+        ...(history.length > 0
+          ? ([
+              {
+                id: 'h-title',
+                type: 'text',
+                variant: 'subtitle',
+                label: 'Escuchados Recientemente',
+              },
+              {
+                id: 'h-carousel',
+                type: 'carousel',
+                data: history.map((hymnId) => ({ hymnId })),
+              },
+            ] as const)
+          : []),
+        ...(favorites.length > 0
+          ? ([
+              {
+                id: 'f-title',
+                type: 'text',
+                variant: 'subtitle',
+                label: 'Tus Favoritos',
+              },
+              {
+                id: 'f-carousel',
+                type: 'carousel',
+                data: favorites.map((hymnId) => ({ hymnId })),
+              },
+            ] as const)
+          : []),
+        ...(playlists.length > 0
+          ? ([
+              {
+                id: 'p-title',
+                type: 'text',
+                variant: 'title',
+                label: 'Tus Playlists',
+              },
+              ...playlists.flatMap<CarouselList>((playlist) =>
+                playlist.hymns.length < 1
+                  ? []
+                  : [
+                      {
+                        id: 'p-' + playlist.id + '-title',
+                        type: 'text',
+                        variant: 'subtitle',
+                        label: playlist.name,
+                      },
+                      {
+                        id: 'p-' + playlist.id + '-carousel',
+                        type: 'carousel',
+                        data: playlist.hymns.map((hymnId) => ({
+                          hymnId,
+                          playlistId: playlist.id,
+                        })),
+                      },
+                    ],
+              ),
+            ] as const)
+          : []),
+        {
+          id: 'cat-title',
+          type: 'text',
+          variant: 'title',
+          label: 'Categorías',
+        },
+        {
+          id: 'cat-carousel',
+          type: 'carousel-cat',
+        },
+      ]}
+      renderItem={({ item }) =>
+        item.type === 'text' ? (
           <UiText
-            style={{ marginHorizontal: 16, marginBottom: 4 }}
-            variant='subtitle'>
-            Escuchados Recientemente
+            style={{ marginBottom: item.variant === 'title' ? 6 : 4 }}
+            variant={item.variant}>
+            {item.label}
           </UiText>
-          <HymnCarousel
-            hymns={history.toReversed().map((h) => hymns[h - 1])}
-            style={{ marginBottom: 16 }}
-          />
-        </>
+        ) : item.type === 'carousel' ? (
+          <HymnCarousel data={item.data} style={{ marginBottom: 16 }} />
+        ) : (
+          <CategoryCarousel />
+        )
+      }></Animated.FlatList>
+  )
+}
+
+type CarouselList =
+  | {
+      id: string
+      type: 'text'
+      variant: 'title' | 'subtitle'
+      label: string
+    }
+  | {
+      id: string
+      type: 'carousel'
+      data: {
+        hymnId: string
+        playlistId?: string | undefined
+      }[]
+    }
+  | {
+      id: string
+      type: 'carousel-cat'
+    }
+
+function CategoryCarousel() {
+  const categories = Categories.getAll()
+  return (
+    <FlashList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToAlignment='center'
+      pagingEnabled
+      decelerationRate='fast'
+      data={categories}
+      keyExtractor={({ id }) => `card-${id}`}
+      renderItem={({ item }) => (
+        <CategoryCard category={item} style={{ marginRight: 8 }} />
       )}
-      <UiText
-        style={{ marginHorizontal: 16, marginBottom: 4 }}
-        variant='subtitle'>
-        Algunos Himnos
-      </UiText>
-      {hymns.slice(0, 40).map((hymn, index) => (
-        <Fragment key={`Hymn-${hymn.number}`}>
-          {index !== 0 && (
-            <View
-              style={{
-                backgroundColor: colors.foreground,
-                opacity: 0.1,
-                width: '100%',
-                height: 1,
-                marginHorizontal: 8,
-              }}
-            />
-          )}
-          <HymnItem hymn={hymn} />
-        </Fragment>
-      ))}
-    </Animated.ScrollView>
+    />
   )
 }
 
 function ActionComponent() {
-  const router = useRouter()
-
   return <IconButton iconName='search' onPress={() => router.push('/search')} />
 }

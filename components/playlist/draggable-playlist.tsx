@@ -1,4 +1,5 @@
-import { Hymn } from '@/lib/types'
+import { useBottomSheet } from '@/hooks/bottom-sheet'
+import { Playlists } from '@/lib/audio/playlists'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -7,8 +8,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import { scheduleOnRN } from 'react-native-worklets'
 import { HymnItem } from '../hymn/hymn-item'
+import { Icon } from '../ui/icon'
+import { ListItem } from '../ui/list-item'
 
-const ITEM_HEIGHT = 80
+const ITEM_HEIGHT = 64
 
 function clampIndex(index: number, max: number) {
   'worklet'
@@ -17,7 +20,7 @@ function clampIndex(index: number, max: number) {
 
 export function DraggablePlaylist({
   index,
-  hymn,
+  hymnId,
   playlistId,
   onDrop,
   action,
@@ -25,7 +28,7 @@ export function DraggablePlaylist({
   total,
 }: {
   index: number
-  hymn: Hymn
+  hymnId: string
   onDrop: (from: number, to: number) => void
   action?: () => React.ReactNode
   move: (from: number, to: number) => void
@@ -80,10 +83,32 @@ export function DraggablePlaylist({
     zIndex: 10,
   }))
 
+  const modal = useBottomSheet()
+
   return (
     <GestureDetector gesture={gesture}>
       <Animated.View style={style}>
-        <HymnItem hymn={hymn} action={action} playlistId={playlistId} />
+        <HymnItem
+          hymnId={hymnId}
+          trailingComp={action}
+          playlistId={playlistId}
+          onLongPress={() => {
+            modal.openSheet([
+              {
+                id: 'delete',
+                comp: ListItem,
+                props: {
+                  title: 'Eliminar',
+                  leadingComp: () => <Icon name='delete' />,
+                  onPress: () => {
+                    Playlists.removeHymn(playlistId, hymnId)
+                    modal.closeSheet()
+                  },
+                },
+              },
+            ])
+          }}
+        />
       </Animated.View>
     </GestureDetector>
   )

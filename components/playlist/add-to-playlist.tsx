@@ -1,8 +1,8 @@
 import { usePlaylists } from '@/hooks/audio/playlists'
+import { useVisual } from '@/hooks/visuals/visual'
 import { Playlists } from '@/lib/audio/playlists'
 import { Playlist } from '@/lib/audio/types'
-import { Hymn } from '@/lib/types'
-import { getVisualAsset } from '@/lib/visuals'
+import { Hymn } from '@/lib/hymns/types'
 import { Image } from 'react-native'
 import { BottomSheet } from '../ui/bottom-sheet'
 import { ListItem } from '../ui/list-item'
@@ -16,37 +16,62 @@ export function AddToPlaylist({
   visible: boolean
   onClose: () => void
 }) {
-  const playlists = usePlaylists().filter(
-    (p) => !p.hymns.some((h) => h.number === hymn.number),
-  )
+  const playlists = usePlaylists().filter((p) => !p.hymns.includes(hymn.id))
 
-  const playlistSelected = async (playlist: Playlist) => {
-    Playlists.addHymn(playlist.id, hymn)
+  const playlistSelected = (playlist: Playlist) => {
+    Playlists.addHymn(playlist.id, hymn.id)
     onClose()
   }
 
   return (
     <BottomSheet visible={visible} onClose={onClose}>
       {playlists.map((playlist) => (
-        <ListItem
+        <PlaylistItem
           key={playlist.id}
-          onPress={() => playlistSelected(playlist)}
-          leadingComp={() => (
-            <Image
-              source={getVisualAsset(playlist.visualId)}
-              width={48}
-              height={48}
-              style={{
-                aspectRatio: 1,
-                flex: 1,
-                borderRadius: 8,
-              }}
-            />
-          )}
-          title={playlist.name}
-          subtitle={`${playlist.hymns.length} Himno(s)`}
+          hymnId={hymn.id}
+          playlist={playlist}
+          onSelected={() => playlistSelected(playlist)}
         />
       ))}
     </BottomSheet>
+  )
+}
+
+interface PlaylistItemProps {
+  hymnId: string
+  playlist: Playlist
+  onSelected?: () => void
+}
+export function PlaylistItem({
+  hymnId,
+  playlist,
+  onSelected,
+}: PlaylistItemProps) {
+  const visual = useVisual(playlist.visualId)
+
+  const playlistSelected = () => {
+    Playlists.addHymn(playlist.id, hymnId)
+    onSelected?.()
+  }
+
+  return (
+    <ListItem
+      key={playlist.id}
+      onPress={() => playlistSelected()}
+      leadingComp={() => (
+        <Image
+          source={{ uri: visual?.url }}
+          width={48}
+          height={48}
+          style={{
+            aspectRatio: 1,
+            flex: 1,
+            borderRadius: 8,
+          }}
+        />
+      )}
+      title={playlist.name}
+      subtitle={`${playlist.hymns.length} Himno(s)`}
+    />
   )
 }

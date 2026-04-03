@@ -1,7 +1,6 @@
 import { randomUUID } from 'expo-crypto'
 import { Signal } from '../signal'
 import { getPlaylists, savePlaylists } from '../storage'
-import { Hymn } from '../types'
 import { Playlist } from './types'
 
 type PlaylistCreateOptions = Omit<Playlist, 'id'>
@@ -14,9 +13,21 @@ export class Playlists {
   static playlistEdited = new Signal<[playlist: Playlist | undefined]>()
 
   static #change() {
-    const newPlaylists = [...playlists.values()]
-    this.playlistsChanged.emit(newPlaylists)
-    savePlaylists(newPlaylists)
+    const p = [...playlists.values()]
+    savePlaylists(p)
+
+    const pc = p.filter((p) => p.id !== 'favorites')
+    this.playlistsChanged.emit(pc)
+  }
+
+  static _addFavorites() {
+    const newPlaylist: Playlist = {
+      id: 'favorites',
+      name: 'Favoritos',
+      visualId: '30',
+      hymns: [],
+    }
+    playlists.set(newPlaylist.id, newPlaylist)
   }
 
   static get(id: string): Playlist | undefined {
@@ -71,26 +82,41 @@ export class Playlists {
     return hasDeleted
   }
 
-  static addHymn(id: string, hymn: Hymn, index?: number) {
+  static addHymn(id: string, hymnId: string, index?: number) {
     const hymns = this.get(id)?.hymns
 
-    if (hymns == null) return
+    if (hymns == null) return false
 
-    const newHymns = hymns.filter((h) => h.number === hymn.number)
+    const newHymns = hymns.filter((h) => h !== hymnId)
 
     if (index == null) {
-      newHymns.push(hymn)
+      newHymns.push(hymnId)
     } else {
-      newHymns.splice(index, 0, hymn)
+      newHymns.splice(index, 0, hymnId)
     }
 
     this.edit(id, {
       hymns: newHymns,
     })
+
+    return true
+  }
+  static removeHymn(id: string, hymnId: string) {
+    const hymns = this.get(id)?.hymns
+
+    if (hymns == null) return false
+
+    const newHymns = hymns.filter((h) => h !== hymnId)
+
+    this.edit(id, {
+      hymns: newHymns,
+    })
+
+    return true
   }
 
   static getAll(): Playlist[] {
-    return [...playlists.values()]
+    return [...playlists.values()].filter((p) => p.id !== 'favorites')
   }
 
   static async setup() {

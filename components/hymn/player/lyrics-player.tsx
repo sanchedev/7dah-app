@@ -4,7 +4,7 @@ import { useCurrentTime, usePlaying } from '@/hooks/audio/audio-controllers'
 import { useIsCurrent } from '@/hooks/audio/current'
 import { useColors } from '@/hooks/colors'
 import { Current } from '@/lib/audio/current'
-import { Hymn } from '@/lib/types'
+import { Hymn } from '@/lib/hymns/types'
 import { useEffect, useState } from 'react'
 
 interface LyricsPlayerProps {
@@ -18,7 +18,7 @@ export function LyricsPlayer({ hymn, playlistId }: LyricsPlayerProps) {
   const isPlaying = usePlaying()
 
   const isCurrent = useIsCurrent({
-    index: Current.indexOf(hymn.number, playlistId),
+    index: Current.indexOf(hymn.id, playlistId),
     playlistId: playlistId,
   })
 

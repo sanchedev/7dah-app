@@ -1,17 +1,18 @@
 import { AudioMetadata } from 'expo-audio'
-import { hymns } from '../hymns'
+import { Hymns } from '../hymns/hymns'
 import { Signal } from '../signal'
-import { Hymn } from '../types'
-import { getVisualFromHymn } from '../visuals'
+import { Visuals } from '../visuals/visuals'
 import { PlayerManager } from './audio-player'
 import { Playlists } from './playlists'
 import { Playlist } from './types'
+
+const hymnsIds = Hymns.getAllIds()
 
 let index = -1
 let playlistId: string | null = null
 
 let playlist: Playlist | null = null
-let hymnList: Hymn[] = hymns
+let hymnList: string[] = hymnsIds
 
 export interface CurrentInfo {
   index?: number
@@ -19,9 +20,11 @@ export interface CurrentInfo {
 }
 
 export class Current {
-  static indexChanged = new Signal<[index: number, hymn: Hymn | null]>()
+  static indexChanged = new Signal<
+    [index: number, hymnId: string | undefined]
+  >()
   static playlistChanged = new Signal<
-    [playlist: Playlist | null, hymnList: Hymn[]]
+    [playlist: Playlist | null, hymnList: string[]]
   >()
 
   static isCurrent(info: CurrentInfo) {
@@ -58,7 +61,9 @@ export class Current {
       if (PlayerManager.player.playing) PlayerManager.player.pause()
 
       if (index !== -1) {
-        PlayerManager.player.replace(getHymnAudioSource(hymnList[index]))
+        getHymnAudioSource(hymnList[index]).then((src) => {
+          PlayerManager.player.replace(src)
+        })
       }
     }
 
@@ -68,7 +73,7 @@ export class Current {
     playlistId = newPlaylistId
 
     playlist = playlistId == null ? null : (Playlists.get(playlistId) ?? null)
-    hymnList = playlist?.hymns ?? hymns
+    hymnList = playlist?.hymns ?? hymnsIds
 
     this.setIndex(index)
 
@@ -82,25 +87,21 @@ export class Current {
     return playlistId
   }
 
-  static getHymn(): Hymn | null {
-    return hymnList[index] ?? null
+  static getHymnId(): string | undefined {
+    return hymnList[index] ?? undefined
   }
   static getPlaylist(): Playlist | null {
     return playlistId ? (Playlists.get(playlistId) ?? null) : null
   }
-  static getHymnList(): Hymn[] {
+  static getHymnList(): string[] {
     return hymnList.slice()
   }
-  static indexOf(hymnNumber: number, playlistId?: string | null) {
-    if (playlistId === null) return hymnNumber - 1
+  static indexOf(hymnId: string, playlistId?: string | null) {
+    if (playlistId === null) return hymnsIds.indexOf(hymnId)
     if (playlistId != null)
-      return (
-        Playlists.get(playlistId)?.hymns.findIndex(
-          (h) => h.number === hymnNumber,
-        ) ?? -1
-      )
+      return Playlists.get(playlistId)?.hymns.indexOf(hymnId) ?? -1
 
-    return hymnList.findIndex((h) => h.number === hymnNumber)
+    return hymnList.indexOf(hymnId)
   }
 
   static reset() {
@@ -108,17 +109,16 @@ export class Current {
   }
 }
 
-function getHymnMetadata(hymn: Hymn): AudioMetadata {
-  const hymnId = hymn.number.toString().padStart(3, '0')
-  const visual = getVisualFromHymn(hymn.number)!
+function getHymnMetadata(hymnId: string): AudioMetadata {
+  const hymn = Hymns.get(hymnId)!
+  const visual = Visuals.getFromHymnId(hymn.id)
 
   return {
-    title: 'Himno #' + hymnId + ' - ' + hymn.title,
-    artworkUrl: `https://7dah.vercel.app/visuals/visual-${visual.id}.webp`,
+    title: 'Himno #' + hymnId.toUpperCase() + ' - ' + hymn.title,
+    artworkUrl: `https://7dah.vercel.app/visuals/visual-${visual?.id ?? '00'}.webp`,
   }
 }
 
-function getHymnAudioSource(hymn: Hymn): string {
-  const hymnId = hymn.number.toString()
-  return `https://res.cloudinary.com/dnlcoyxtq/video/upload/audios/sung/hymn-${hymnId}.mp3`
+async function getHymnAudioSource(hymnId: string): Promise<string> {
+  return Hymns.getAudioSrc(hymnId)
 }

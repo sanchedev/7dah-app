@@ -51,26 +51,26 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name='favorites'
+          name='search'
           options={{
-            title: 'Favoritos',
+            title: 'Buscar',
             tabBarIcon: ({ focused }) => (
               <MaterialIcons
                 size={28}
-                name='favorite'
+                name='search'
                 color={colors.foreground + (focused ? 'ff' : 88)}
               />
             ),
           }}
         />
         <Tabs.Screen
-          name='playlists'
+          name='lists'
           options={{
-            title: 'Playlists',
+            title: 'Listas',
             tabBarIcon: ({ focused }) => (
               <MaterialIcons
                 size={28}
-                name='music-note'
+                name='list'
                 color={colors.foreground + (focused ? 'ff' : 88)}
               />
             ),

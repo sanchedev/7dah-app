@@ -1,5 +1,5 @@
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
-import { hymns } from '../hymns'
+import { Hymns } from '../hymns/hymns'
 import { Signal } from '../signal'
 import { PlayerManager } from './audio-player'
 import { Current, CurrentInfo } from './current'
@@ -19,10 +19,14 @@ export class AudioControllers {
     console.log('Current Playlist ID: ', currentPlaylistId)
     console.log('Current Index: ', currentIndex)
 
+    console.log('Info is null? ' + (info == null).toString())
+    console.log("What's Playlist? " + info?.playlistId?.toString())
+    console.log("What's Index? " + info?.index?.toString())
+
     if (
       info == null ||
       (currentPlaylistId === info.playlistId &&
-        (info == null || currentIndex === info.index))
+        (info?.index == null || currentIndex === info.index))
     ) {
       console.log('Info is null or Info is same current')
 
@@ -150,10 +154,10 @@ export class AudioControllers {
         this.playStateChanged.emit(playing)
 
         if (playing) {
-          const hymnNumber = Current.getHymn()?.number
-          if (hymnNumber != null) {
-            console.log('Adding Hymn', hymnNumber, 'to History...')
-            History.push(hymnNumber)
+          const hymnId = Current.getHymnId()
+          if (hymnId != null) {
+            console.log('Adding Hymn', hymnId, 'to History...')
+            History.push(hymnId)
           }
         }
 
@@ -222,7 +226,7 @@ export class AudioControllers {
           )
           console.log('Getting random Index...')
           const newIndex = Math.floor(
-            Math.random() * (playlist?.hymns ?? hymns).length,
+            Math.random() * (playlist?.hymns ?? Hymns.getAllIds()).length,
           )
           console.log('Setting random Index...')
           Current.setIndex(newIndex)

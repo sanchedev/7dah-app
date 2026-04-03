@@ -1,7 +1,7 @@
 import { HymnList } from '@/components/hymn/hymn-list'
 import { IconButton } from '@/components/ui/icon-button'
 import { useColors } from '@/hooks/colors'
-import { hymns } from '@/lib/hymns'
+import { Hymns } from '@/lib/hymns/hymns'
 import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { StyleSheet, TextInput, View } from 'react-native'
@@ -16,23 +16,17 @@ export default function SearchScreen() {
   const colors = useColors()
   const router = useRouter()
 
-  const [filteredHymns, setFilteredHymns] = useState(hymns)
+  const [filteredHymns, setFilteredHymns] = useState(Hymns.getAllIds())
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    setFilteredHymns(
-      hymns.filter(
-        (hymn) =>
-          hymn.number.toString().includes(search) ||
-          hymn.title.toLowerCase().includes(search.toLowerCase()),
-      ),
-    )
+    setFilteredHymns(Hymns.search(search))
   }, [search])
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <HymnList
-        hymns={filteredHymns}
+        hymnsIds={filteredHymns}
         contentContainerStyle={{
           paddingTop: navHeight + 16,
           paddingBottom: bottom,

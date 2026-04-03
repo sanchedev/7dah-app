@@ -3,7 +3,7 @@ import { Pressable, PressableProps, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { UiText } from './text'
 
-interface ListItemProps extends PressableProps {
+export interface ListItemProps extends PressableProps {
   leadingComp?: () => React.ReactNode
   title: string
   subtitle?: string
@@ -17,12 +17,13 @@ export function ListItem({
   title,
   subtitle,
   trailingComp: Trailing,
+  disabled,
   ...props
 }: ListItemProps) {
   const colors = useColors()
 
   return (
-    <Pressable {...props}>
+    <Pressable {...props} disabled={disabled}>
       {({ pressed }) => (
         <Animated.View
           style={[
@@ -39,11 +40,15 @@ export function ListItem({
               backgroundColor: colors.hoverBackground,
               borderRadius: 8,
             },
+            disabled && {
+              opacity: 0.5,
+            },
           ]}>
           {Leading && (
             <View
               style={{
                 height: ITEM_HEIGHT - 16,
+                width: ITEM_HEIGHT - 16,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

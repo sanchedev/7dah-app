@@ -3,8 +3,9 @@ import { Button } from '@/components/ui/button'
 import { IconButton } from '@/components/ui/icon-button'
 import { UiText } from '@/components/ui/text'
 import { useColors } from '@/hooks/colors'
+import { useVisual } from '@/hooks/visuals/visual'
 import { Playlists } from '@/lib/audio/playlists'
-import { getVisualAsset, visuals } from '@/lib/visuals'
+import { Visuals } from '@/lib/visuals/visuals'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
 import { useEffect, useRef, useState } from 'react'
@@ -25,24 +26,14 @@ const getSize = ({ window }: { window?: ScaledSize } = {}) => {
   return Math.min(dimensions.height, dimensions.width)
 }
 
+const visuals = Visuals.getAllIds()
 export default function CreatePlaylistScreen() {
   const colors = useColors()
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const [visualId, setVisualId] = useState(visuals[0].id)
 
-  const visualAsset = getVisualAsset(visualId)
-
-  const [cardSize, setCardSize] = useState(getSize())
-
-  const size = Math.min(384, cardSize - 32 + insets.left + insets.right) * 0.75
-
-  useEffect(() => {
-    const onResize = (dimensions: { window: ScaledSize }) => {
-      setCardSize(getSize(dimensions))
-    }
-    Dimensions.addEventListener('change', onResize)
-  }, [])
+  const [visualIndex, setVisualIndex] = useState(0)
+  const visual = useVisual(visuals[visualIndex])!
 
   const targetRef = useRef<View | null>(null)
 
@@ -51,14 +42,14 @@ export default function CreatePlaylistScreen() {
   const handleCreate = () => {
     Playlists.add({
       name,
-      visualId,
+      visualId: visual.id,
       hymns: [],
     })
     router.back()
   }
 
   return (
-    <VisualBackground visualId={visualId}>
+    <VisualBackground visualId={visual.id}>
       <BlurTargetView
         ref={targetRef}
         style={{
@@ -66,7 +57,7 @@ export default function CreatePlaylistScreen() {
           flexWrap: 'wrap',
           ...StyleSheet.absoluteFill,
         }}>
-        <Image source={visualAsset} width={1024} height={1024} />
+        <Image source={{ uri: visual.url }} width={1024} height={1024} />
       </BlurTargetView>
       <BlurView
         blurTarget={targetRef}
@@ -116,35 +107,15 @@ export default function CreatePlaylistScreen() {
               snapToAlignment='center'
               pagingEnabled
               decelerationRate='fast'>
-              {visuals.map((visual) => {
+              {visuals.map((visualId, index) => {
                 return (
-                  <Pressable
-                    key={visual.id}
-                    style={({ pressed }) => [
-                      {
-                        padding: 8,
-                      },
-                      pressed && {
-                        backgroundColor: colors.hoverBackground,
-                        borderRadius: 24,
-                      },
-                      visual.id === visualId && {
-                        backgroundColor: colors.secondaryForeground,
-                        borderRadius: 24,
-                      },
-                    ]}
-                    onPress={() => setVisualId(visual.id)}>
-                    <Image
-                      source={getVisualAsset(visual.id)}
-                      style={{
-                        width: size,
-                        height: size,
-                      }}
-                      width={size}
-                      height={size}
-                      borderRadius={16}
-                    />
-                  </Pressable>
+                  <VisualSelector
+                    key={visualId}
+                    visualId={visualId}
+                    index={index}
+                    onSelect={() => setVisualIndex(index)}
+                    selected={index === visualIndex}
+                  />
                 )
               })}
             </ScrollView>
@@ -167,6 +138,9 @@ export default function CreatePlaylistScreen() {
                 marginVertical: 4,
                 flex: 1,
                 color: colors.cardForeground,
+                borderStyle: 'solid',
+                borderWidth: 1,
+                borderColor: colors.cardForeground + '22',
               }}
               placeholderTextColor={colors.cardForeground + 88}
               value={name}
@@ -188,5 +162,65 @@ export default function CreatePlaylistScreen() {
         </ScrollView>
       </BlurView>
     </VisualBackground>
+  )
+}
+
+interface VisualSelectorProps {
+  visualId: string
+  index: number
+  onSelect: () => void
+  selected: boolean
+}
+
+function VisualSelector({
+  visualId,
+  index,
+  onSelect,
+  selected,
+}: VisualSelectorProps) {
+  const colors = useColors()
+  const visual = useVisual(visualId)
+
+  const insets = useSafeAreaInsets()
+
+  const [cardSize, setCardSize] = useState(getSize())
+
+  const size = Math.min(384, cardSize - 32 + insets.left + insets.right) * 0.75
+
+  useEffect(() => {
+    const onResize = (dimensions: { window: ScaledSize }) => {
+      setCardSize(getSize(dimensions))
+    }
+    Dimensions.addEventListener('change', onResize)
+  }, [])
+
+  return (
+    <Pressable
+      key={visualId}
+      style={({ pressed }) => [
+        {
+          padding: 8,
+        },
+        pressed && {
+          backgroundColor: colors.hoverBackground,
+          borderRadius: 24,
+        },
+        selected && {
+          backgroundColor: colors.secondaryForeground,
+          borderRadius: 24,
+        },
+      ]}
+      onPress={() => onSelect()}>
+      <Image
+        source={{ uri: visual?.url }}
+        style={{
+          width: size,
+          height: size,
+        }}
+        width={size}
+        height={size}
+        borderRadius={16}
+      />
+    </Pressable>
   )
 }

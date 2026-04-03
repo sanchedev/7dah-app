@@ -1,6 +1,6 @@
 import { UiText } from '@/components/ui/text'
-import { Hymn } from '@/lib/types'
-import { getVisualAsset, getVisualFromHymn } from '@/lib/visuals'
+import { useVisualFromHymnId } from '@/hooks/visuals/visual'
+import { Hymn } from '@/lib/hymns/types'
 import { useEffect, useState } from 'react'
 import { Dimensions, Image, ScaledSize, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -14,8 +14,7 @@ const getSize = ({ window }: { window?: ScaledSize } = {}) => {
 }
 
 export function HeaderPlayer({ hymn }: HeaderPlayerProps) {
-  const visual = getVisualFromHymn(hymn.number)!
-  const visualAsset = getVisualAsset(visual.id)!
+  const visual = useVisualFromHymnId(hymn.id)
 
   const insets = useSafeAreaInsets()
 
@@ -39,7 +38,7 @@ export function HeaderPlayer({ hymn }: HeaderPlayerProps) {
           marginVertical: 16,
         }}>
         <Image
-          source={visualAsset}
+          source={{ uri: visual?.url }}
           style={{ aspectRatio: 1 }}
           width={cardPadd}
           height={cardPadd}
@@ -65,7 +64,7 @@ export function HeaderPlayer({ hymn }: HeaderPlayerProps) {
           </UiText>
 
           <UiText style={{ opacity: 0.5 }}>
-            Himno #{hymn.number.toString().padStart(3, '0')}
+            Himno #{hymn.id.toUpperCase()}
           </UiText>
         </View>
       </View>

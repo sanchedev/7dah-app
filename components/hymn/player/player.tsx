@@ -1,10 +1,10 @@
 import { usePlaylist } from '@/hooks/audio/playlist'
 import { useColors } from '@/hooks/colors'
-import { useGoToHymn } from '@/hooks/goto-hymn'
+import { useVisualFromHymnId } from '@/hooks/visuals/visual'
 import { Current } from '@/lib/audio/current'
-import { Hymn } from '@/lib/types'
-import { getVisualFromHymn } from '@/lib/visuals'
-import { useEffect, useRef, useState } from 'react'
+import { goToHymn } from '@/lib/hymns/link'
+import { Hymn } from '@/lib/hymns/types'
+import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
   Extrapolation,
@@ -14,7 +14,6 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AddToPlaylist } from '../../playlist/add-to-playlist'
 import VisualBackground from '../hymn-background'
 import { ControlsPlayer } from './controls-player'
 import { HeaderPlayer } from './header-player'
@@ -28,27 +27,26 @@ interface HymnPlayerProps {
 }
 
 export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
-  const visual = getVisualFromHymn(hymn.number)!
+  const visual = useVisualFromHymnId(hymn.id)!
 
   const insets = useSafeAreaInsets()
 
   const colors = useColors()
 
   const lastIndex = useRef(Current.getIndex())
-  const go = useGoToHymn()
 
   useEffect(() => {
     const handleIndexChange = (index: number) => {
-      const currentHymn = Current.getHymn()
+      const currentHymnId = Current.getHymnId()
 
-      if (currentHymn != null) {
+      if (currentHymnId != null) {
         if (
           !Current.isCurrent({
-            index: Current.indexOf(hymn.number, playlistId ?? null),
+            index: Current.indexOf(hymn.id, playlistId ?? null),
             playlistId: playlistId ?? null,
           })
         ) {
-          go(currentHymn.number, playlistId ?? null)
+          goToHymn(currentHymnId, playlistId, { replace: true })
         }
       }
 
@@ -60,9 +58,7 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
     return () => {
       Current.indexChanged.off(handleIndexChange)
     }
-  }, [])
-
-  const [playlistModalVisible, setPlaylistModalVisible] = useState(false)
+  }, [hymn, playlistId])
 
   const playlist = usePlaylist(playlistId ?? null)
 
@@ -99,10 +95,7 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
         <View style={{ height: insets.top + 56 }} />
         <HeaderPlayer hymn={hymn} />
         <ControlsPlayer hymn={hymn} playlist={playlist} />
-        <OptionsPlayer
-          hymn={hymn}
-          onCloseAddToPlaylist={() => setPlaylistModalVisible(true)}
-        />
+        <OptionsPlayer hymn={hymn} />
         <LyricsPlayer hymn={hymn} playlistId={playlist?.id ?? null} />
         <View style={{ height: insets.bottom + 16 }} />
       </Animated.ScrollView>
@@ -133,12 +126,6 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
           <TopBarPlayer hymn={hymn} playlist={playlist} />
         </View>
       </Animated.View>
-
-      <AddToPlaylist
-        hymn={hymn}
-        visible={playlistModalVisible}
-        onClose={() => setPlaylistModalVisible(false)}
-      />
     </VisualBackground>
   )
 }

@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 import { useSignalState } from '../signal'
 
 export function useCurrent() {
-  const [index, hymn] = useSignalState(
+  const [index, hymnId] = useSignalState(
     Current.indexChanged,
     Current.getIndex(),
-    Current.getHymn(),
+    Current.getHymnId(),
   )
   const [playlist] = useSignalState(
     Current.playlistChanged,
@@ -16,7 +16,7 @@ export function useCurrent() {
 
   return {
     index,
-    hymn,
+    hymnId,
     playlistId: playlist?.id ?? null,
     playlist,
   }

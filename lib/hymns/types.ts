@@ -1,4 +1,5 @@
 export interface Hymn {
+  id: string
   number: number
   title: string
   lyrics: Lyric[]
@@ -11,15 +12,4 @@ export interface Lyric {
   line: string
   index: number
   timestamp: number
-}
-
-export interface Visual {
-  id: string
-  range: [number, number]
-  theme: 'light' | 'dark'
-  orientation: {
-    x: number
-    y: number
-  }
-  icon: string
 }

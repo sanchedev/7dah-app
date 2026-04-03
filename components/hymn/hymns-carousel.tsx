@@ -1,24 +1,20 @@
 import { useColors } from '@/hooks/colors'
-import { Hymn } from '@/lib/types'
-import { getVisualAsset, getVisualFromHymn } from '@/lib/visuals'
-import { useRouter } from 'expo-router'
+import { useHymn } from '@/hooks/hymn/hymn'
+import { useVisualFromHymnId } from '@/hooks/visuals/visual'
+import { goToHymn } from '@/lib/hymns/link'
+import { FlashList, FlashListProps } from '@shopify/flash-list'
 import { useEffect, useState } from 'react'
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  ScaledSize,
-  ScrollView,
-  ScrollViewProps,
-  View,
-} from 'react-native'
+import { Dimensions, Image, Pressable, ScaledSize, View } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { UiText } from '../ui/text'
+import { HymnAction } from './types'
 
-interface HymnCardProps extends ScrollViewProps {
-  hymns: Hymn[]
-  action?: ({ hymn }: { hymn: Hymn }) => React.ReactNode
+interface HymnCardProps extends Omit<
+  FlashListProps<{ hymnId: string; playlistId?: string }>,
+  'data' | 'renderItem' | 'horizontal'
+> {
+  data: { hymnId: string; playlistId?: string }[]
+  action?: HymnAction
 }
 
 const getSize = ({ window }: { window?: ScaledSize } = {}) => {
@@ -27,16 +23,14 @@ const getSize = ({ window }: { window?: ScaledSize } = {}) => {
 }
 
 export function HymnCarousel({
-  hymns,
+  data,
   action,
   contentContainerStyle,
   ...props
 }: HymnCardProps) {
   const [cardSize, setCardSize] = useState(getSize())
 
-  const { left, right } = useSafeAreaInsets()
-
-  const cardPadd = cardSize - 32 - cardSize / 4
+  const cardPadd = Math.min(cardSize - 32 - cardSize / 4, 192)
 
   useEffect(() => {
     const onResize = (dimensions: { window: ScaledSize }) => {
@@ -46,12 +40,10 @@ export function HymnCarousel({
   }, [])
 
   return (
-    <ScrollView
+    <FlashList
       horizontal
       contentContainerStyle={[
         {
-          paddingLeft: left + 8,
-          paddingRight: right + 8,
           gap: 8,
         },
         contentContainerStyle,
@@ -60,47 +52,45 @@ export function HymnCarousel({
       snapToAlignment='center'
       pagingEnabled
       decelerationRate='fast'
-      {...props}>
-      {hymns.map((hymn, index) => (
+      data={data}
+      keyExtractor={({ hymnId: h, playlistId: p }) => `card-${p}:${h}`}
+      renderItem={({ item: { hymnId, playlistId } }) => (
         <HymnCard
-          key={`Hymn-card-${hymn.number}-${index}`}
-          hymn={hymn}
+          hymnId={hymnId}
+          playlistId={playlistId}
           size={cardPadd}
           action={action}
         />
-      ))}
-    </ScrollView>
+      )}
+      {...props}></FlashList>
   )
 }
 
 function HymnCard({
-  hymn,
+  hymnId,
+  playlistId,
   size,
   action: Action,
 }: {
-  hymn: Hymn
+  hymnId: string
+  playlistId?: string
   size: number
-  action?: ({ hymn }: { hymn: Hymn }) => React.ReactNode
+  action?: HymnAction
 }) {
-  const visual = getVisualFromHymn(hymn.number)!
-  const visualAsset = getVisualAsset(visual.id)!
+  const hymn = useHymn(hymnId)
+  const visual = useVisualFromHymnId(hymnId)!
 
   const colors = useColors()
-  const router = useRouter()
 
   return (
-    <Pressable
-      onPress={() =>
-        router.navigate({
-          pathname: '/hymns/[hymn]',
-          params: { hymn: hymn.number.toString().padStart(3, '0') },
-        })
-      }>
+    <Pressable onPress={() => goToHymn(hymnId, playlistId)}>
       {({ pressed }) => (
         <Animated.View
           style={[
             {
               flexDirection: 'column',
+              width: size + 16,
+              overflow: 'hidden',
               padding: 8,
               gap: 8,
               transition: 'all 100ms',
@@ -111,7 +101,7 @@ function HymnCard({
             },
           ]}>
           <Image
-            source={visualAsset}
+            source={{ uri: visual.url }}
             style={{ width: size, height: size }}
             width={size}
             height={size}
@@ -125,13 +115,15 @@ function HymnCard({
                 justifyContent: 'center',
                 flex: 1,
               }}>
-              <UiText variant='h3'>{hymn.title}</UiText>
+              <UiText variant='h3' numberOfLines={1}>
+                {hymn?.title}
+              </UiText>
               <UiText style={{ opacity: 0.5, fontSize: 14 }}>
-                Himno #{hymn.number.toString().padStart(3, '0')}
+                Himno #{hymn?.id.toUpperCase()}
               </UiText>
             </View>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              {Action && <Action hymn={hymn} />}
+              {hymn && Action && <Action hymn={hymn} playlistId={playlistId} />}
             </View>
           </View>
         </Animated.View>

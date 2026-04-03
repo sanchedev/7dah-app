@@ -1,12 +1,12 @@
 import { Signal } from '../signal'
 import { getHistory, saveHistory } from '../storage'
 
-const history: number[] = []
+const history: string[] = []
 
 export class History {
-  static historyChanged = new Signal<[history: number[]]>()
+  static historyChanged = new Signal<[history: string[]]>()
 
-  static #change(newHistory: number[]) {
+  static #change(newHistory: string[]) {
     history.length = 0
 
     history.push(...newHistory)
@@ -14,7 +14,7 @@ export class History {
     saveHistory(newHistory)
   }
 
-  static async push(hymn: number) {
+  static async push(hymn: string) {
     const newHistory = history.filter((h) => hymn !== h)
     newHistory.unshift(hymn)
 
@@ -26,7 +26,7 @@ export class History {
   }
 
   static async setup() {
-    const newHistory: number[] = []
+    const newHistory: string[] = []
 
     for (const hymn of await getHistory()) {
       if (newHistory.includes(hymn)) continue

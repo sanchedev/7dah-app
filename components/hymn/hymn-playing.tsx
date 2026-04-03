@@ -1,8 +1,9 @@
 import { useCurrentTime } from '@/hooks/audio/audio-controllers'
 import { useCurrent } from '@/hooks/audio/current'
 import { useColors } from '@/hooks/colors'
-import { useGoToHymn } from '@/hooks/goto-hymn'
-import { getVisualAsset, getVisualFromHymn } from '@/lib/visuals'
+import { useHymn } from '@/hooks/hymn/hymn'
+import { useVisualFromHymnId } from '@/hooks/visuals/visual'
+import { goToHymn } from '@/lib/hymns/link'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import { useRef } from 'react'
 import { Image, Pressable, StyleSheet, View } from 'react-native'
@@ -12,22 +13,18 @@ import { UiText } from '../ui/text'
 
 export function HymnPlaying() {
   const current = useCurrent()
+  const hymn = useHymn(current.hymnId)
+  const visual = useVisualFromHymnId(current.hymnId)
 
   const targetRef = useRef<View | null>(null)
 
-  const visual =
-    current.hymn == null ? null : getVisualFromHymn(current.hymn.number)
-  const visualAsset = visual && getVisualAsset(visual.id)
-
   const colors = useColors()
-
-  const go = useGoToHymn()
 
   return (
     <View
       style={{
         position: 'absolute',
-        bottom: 82 * (current.hymn == null ? -1 : 1),
+        bottom: 82 * (current.hymnId == null ? -1 : 1),
         height: 82,
         left: 16,
         right: 16,
@@ -43,7 +40,7 @@ export function HymnPlaying() {
           ...StyleSheet.absoluteFill,
         }}>
         <Image
-          source={visualAsset ?? undefined}
+          source={{ uri: visual?.url }}
           style={{ flex: 1 }}
           width={1024}
           height={1024}
@@ -60,7 +57,8 @@ export function HymnPlaying() {
         <View style={{ flex: 1 }}>
           <Pressable
             onPress={() => {
-              go(current.hymn?.number ?? -1, current.playlist?.id ?? null)
+              if (hymn == null) return
+              goToHymn(hymn.id, current.playlist?.id)
             }}>
             {({ pressed }) => (
               <Animated.View
@@ -80,7 +78,7 @@ export function HymnPlaying() {
                   },
                 ]}>
                 <Image
-                  source={visualAsset ?? undefined}
+                  source={{ uri: visual?.url }}
                   style={{ width: 64, height: 64 }}
                   width={64}
                   height={64}
@@ -94,15 +92,12 @@ export function HymnPlaying() {
                     flex: 1,
                   }}>
                   <UiText style={{ fontSize: 16 }} numberOfLines={1}>
-                    {current.hymn?.title}
+                    {hymn?.title}
                   </UiText>
                   <UiText
                     style={{ opacity: 0.5, fontSize: 12 }}
                     numberOfLines={2}>
-                    Himno #
-                    {current.hymn == null
-                      ? '---'
-                      : current.hymn.number.toString().padStart(3, '0')}
+                    Himno #{hymn == null ? '---' : hymn.id.toUpperCase()}
                     {current.playlist?.name
                       ? ` - ${current.playlist.name}`
                       : ''}
@@ -128,6 +123,7 @@ function PlayBtn() {
 
 function CurrentTimeSlider() {
   const current = useCurrent()
+  const hymn = useHymn(current.hymnId)
   const colors = useColors()
   const currentTime = useCurrentTime() * 1000
 
@@ -142,7 +138,7 @@ function CurrentTimeSlider() {
       />
       <View
         style={{
-          flex: (current.hymn?.duration ?? 10 ** 4) - currentTime,
+          flex: (hymn?.duration ?? 10 ** 4) - currentTime,
           backgroundColor: colors.secondaryBackground,
           opacity: 0.25,
         }}

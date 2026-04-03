@@ -47,9 +47,9 @@ export function IconButton({
             filled &&
               pressed && {
                 backgroundColor:
-                  hover != null
-                    ? colors[hover] + 'aa'
-                    : colors.primaryBackground,
+                  hover === 'hoverBackground'
+                    ? colors[hover]
+                    : colors[hover ?? 'primaryBackground'] + 'aa',
               },
           ]}>
           <Icon

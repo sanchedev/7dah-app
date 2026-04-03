@@ -1,45 +1,42 @@
 import { Signal } from '../signal'
-import { getFavorites, saveFavorites } from '../storage'
-
-const favorites = new Set<number>()
+import { Playlists } from './playlists'
 
 export class Favorites {
-  static favoritesChanged = new Signal<[favorites: Set<number>]>()
+  static favoritesChanged = new Signal<[favorites: string[]]>()
+
+  static #getHymns() {
+    const hymns = Playlists.get('favorites')?.hymns
+    if (hymns != null) return hymns
+    Playlists._addFavorites()
+    return []
+  }
 
   static #change() {
-    this.favoritesChanged.emit(this.get())
-    saveFavorites(Array.from(favorites))
+    const fav = this.get()
+    this.favoritesChanged.emit(fav)
   }
 
-  static get(): Set<number> {
-    return new Set(favorites)
+  static get(): string[] {
+    return this.#getHymns()
   }
 
-  static add(hymnNumber: number): boolean {
-    if (favorites.has(hymnNumber)) return false
-
-    favorites.add(hymnNumber)
+  static add(hymnId: string): boolean {
+    if (this.get().includes(hymnId)) return false
+    const wasAdded = Playlists.addHymn('favorites', hymnId)
     this.#change()
-    return true
+    return wasAdded
   }
 
-  static delete(hymnNumber: number): boolean {
-    if (!favorites.has(hymnNumber)) return false
-    const hasDeleted = favorites.delete(hymnNumber)
+  static delete(hymnId: string): boolean {
+    if (!this.get().includes(hymnId)) return false
+    const wasDeleted = Playlists.removeHymn('favorites', hymnId)
 
     this.#change()
 
-    return hasDeleted
+    return wasDeleted
   }
 
-  static toggle(hymnNumber: number) {
-    if (!this.add(hymnNumber)) this.delete(hymnNumber)
-  }
-
-  static async setup() {
-    favorites.clear()
-    for (const hymnNumber of await getFavorites()) {
-      favorites.add(hymnNumber)
-    }
+  static toggle(hymnId: string) {
+    if (!this.add(hymnId)) this.delete(hymnId)
   }
 }

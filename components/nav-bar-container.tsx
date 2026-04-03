@@ -1,7 +1,7 @@
 import { useColors } from '@/hooks/colors'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import React, { useRef } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,13 +16,15 @@ import { UiText } from './ui/text'
 const NAV_HEIGHT = 72
 
 interface NavBarContainerProps {
-  ScrollComponent: (props: {
-    paddingTop: number
-    scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>
-  }) => React.ReactNode
+  ScrollComponent: (props: ScrollComponentProps) => React.ReactNode
 
   title: string
   ActionComponent?: () => React.ReactNode
+}
+
+export type ScrollComponentProps = {
+  style: StyleProp<ViewStyle>
+  scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>
 }
 
 export function NavBarContainer({
@@ -63,7 +65,12 @@ export function NavBarContainer({
       <BlurTargetView ref={targetRef} style={{ flex: 1 }}>
         <ScrollComponent
           scrollHandler={handler}
-          paddingTop={insets.top + NAV_HEIGHT}
+          style={{
+            paddingTop: insets.top + NAV_HEIGHT,
+            paddingLeft: insets.left + 12,
+            paddingRight: insets.right + 12,
+            paddingBottom: 128,
+          }}
         />
       </BlurTargetView>
       <Animated.View

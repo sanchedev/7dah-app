@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as z from 'zod'
-import { Playlist } from './audio/types'
-import { hymns } from './hymns'
+import { Hymns } from './hymns/hymns'
 
 const KEYS = {
   FAVORITES: 'favorites',
@@ -9,73 +8,53 @@ const KEYS = {
   HISTORY: 'history',
 }
 
-const favoritesSchema = z.array(z.number().int().min(0).max(613))
+const hymnIdSchema = z.string().refine(async (str) => Hymns.has(str))
 
-export async function saveFavorites(favorites: number[]): Promise<number[]> {
-  await AsyncStorage.setItem(KEYS.FAVORITES, JSON.stringify(favorites))
-  return favorites
-}
-
-export async function getFavorites(): Promise<number[]> {
-  try {
-    const data = await AsyncStorage.getItem(KEYS.FAVORITES)
-    const { data: favorites } = await favoritesSchema.safeParseAsync(
-      JSON.parse(data ?? ''),
-    )
-    return favorites ?? []
-  } catch {
-    return []
-  }
-}
-
+type PlaylistsType = z.infer<typeof playlistsSchema>
 const playlistsSchema = z.array(
   z.object({
     id: z.string(),
     name: z.string(),
     visualId: z.string(),
-    hymns: z.array(z.number().int().min(0).max(613)),
+    hymns: z.array(hymnIdSchema),
   }),
 )
 
-export async function savePlaylists(playlists: Playlist[]) {
-  await AsyncStorage.setItem(
-    KEYS.PLAYLISTS,
-    JSON.stringify(
-      playlists.map((p) => ({
-        id: p.id,
-        name: p.name,
-        visualId: p.visualId,
-        hymns: p.hymns.map((h) => h.number),
-      })),
-    ),
-  )
+export async function savePlaylists(playlists: PlaylistsType) {
+  await AsyncStorage.setItem(KEYS.PLAYLISTS, JSON.stringify(playlists))
 }
 
-export async function getPlaylists(): Promise<Playlist[]> {
+export async function getPlaylists(): Promise<PlaylistsType> {
   try {
     const data = await AsyncStorage.getItem(KEYS.PLAYLISTS)
     const { data: playlists } = await playlistsSchema.safeParseAsync(
       JSON.parse(data ?? ''),
     )
-    return (playlists ?? []).map((p) => ({
-      id: p.id,
-      name: p.name,
-      visualId: p.visualId,
-      hymns: p.hymns.map((h) => hymns[h - 1]),
-    }))
+    const p = playlists ?? []
+
+    if (p.every((pl) => pl.id !== 'favorites')) {
+      p.unshift({
+        id: 'favorites',
+        name: 'Favoritos',
+        visualId: '30',
+        hymns: [],
+      })
+    }
+
+    return p
   } catch {
     return []
   }
 }
 
-const historySchema = z.array(z.number().int().min(0).max(613))
+type HistoryType = z.infer<typeof historySchema>
+const historySchema = z.array(hymnIdSchema)
 
-export async function saveHistory(history: number[]): Promise<number[]> {
+export async function saveHistory(history: HistoryType) {
   await AsyncStorage.setItem(KEYS.HISTORY, JSON.stringify(history))
-  return history
 }
 
-export async function getHistory(): Promise<number[]> {
+export async function getHistory(): Promise<HistoryType> {
   try {
     const data = await AsyncStorage.getItem(KEYS.HISTORY)
     const { data: history } = await historySchema.safeParseAsync(

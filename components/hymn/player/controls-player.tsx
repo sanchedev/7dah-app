@@ -9,7 +9,7 @@ import { useColors } from '@/hooks/colors'
 import { AudioControllers } from '@/lib/audio/audio-controllers'
 import { Current } from '@/lib/audio/current'
 import { Playlist } from '@/lib/audio/types'
-import { Hymn } from '@/lib/types'
+import { Hymn } from '@/lib/hymns/types'
 import Slider from '@react-native-community/slider'
 import { View } from 'react-native'
 
@@ -35,7 +35,7 @@ export function ControlsPlayer({ hymn, playlist }: ControlsPlayerProps) {
         <SkipPrevBtn hymn={hymn} playlist={playlist} />
         <PlayPauseButton
           info={{
-            index: Current.indexOf(hymn.number, playlist?.id ?? null),
+            index: Current.indexOf(hymn.id, playlist?.id ?? null),
             playlistId: playlist?.id ?? null,
           }}
           iconSize='xl'
@@ -53,7 +53,7 @@ function CurrentTimeSlider({ hymn, playlist }: ControlsPlayerProps) {
   const colors = useColors()
 
   const isCurrent = useIsCurrent({
-    index: Current.indexOf(hymn.number, playlist?.id ?? null),
+    index: Current.indexOf(hymn.id, playlist?.id ?? null),
     playlistId: playlist?.id ?? null,
   })
 
@@ -99,12 +99,12 @@ function formatTime(seconds: number) {
 
 function SkipPrevBtn({ hymn, playlist }: ControlsPlayerProps) {
   const isCurrent = useIsCurrent({
-    index: Current.indexOf(hymn.number, playlist?.id ?? null),
+    index: Current.indexOf(hymn.id, playlist?.id ?? null),
     playlistId: playlist?.id ?? null,
   })
 
   const handlePress = () => {
-    const index = Current.indexOf(hymn.number)
+    const index = Current.indexOf(hymn.id)
     if (index < 1) return
 
     Current.setIndex(index - 1)
@@ -123,12 +123,12 @@ function SkipPrevBtn({ hymn, playlist }: ControlsPlayerProps) {
 
 function SkipNextBtn({ hymn, playlist }: ControlsPlayerProps) {
   const isCurrent = useIsCurrent({
-    index: Current.indexOf(hymn.number, playlist?.id ?? null),
+    index: Current.indexOf(hymn.id, playlist?.id ?? null),
     playlistId: playlist?.id ?? null,
   })
 
   const handlePress = () => {
-    const index = Current.indexOf(hymn.number)
+    const index = Current.indexOf(hymn.id)
     if (index >= Current.getHymnList().length - 1) return
 
     Current.setIndex(index + 1)
