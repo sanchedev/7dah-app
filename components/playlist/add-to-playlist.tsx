@@ -3,7 +3,7 @@ import { useVisual } from '@/hooks/visuals/visual'
 import { Playlists } from '@/lib/audio/playlists'
 import { Playlist } from '@/lib/audio/types'
 import { Hymn } from '@/lib/hymns/types'
-import { Image } from 'react-native'
+import { Image } from 'expo-image'
 import { BottomSheet } from '../ui/bottom-sheet'
 import { ListItem } from '../ui/list-item'
 
@@ -61,12 +61,12 @@ export function PlaylistItem({
       leadingComp={() => (
         <Image
           source={{ uri: visual?.url }}
-          width={48}
-          height={48}
           style={{
             aspectRatio: 1,
             flex: 1,
             borderRadius: 8,
+            width: 48,
+            height: 48,
           }}
         />
       )}

@@ -1,7 +1,7 @@
 import { useHymn } from '@/hooks/hymn/hymn'
 import { useVisualFromHymnId } from '@/hooks/visuals/visual'
 import { goToHymn } from '@/lib/hymns/link'
-import { Image } from 'react-native'
+import { Image } from 'expo-image'
 import { ListItem, ListItemProps } from '../ui/list-item'
 import { HymnAction } from './types'
 
@@ -30,8 +30,7 @@ export function HymnItem({
       leadingComp={() => (
         <Image
           source={{ uri: visual?.url }}
-          style={{ flex: 1, aspectRatio: 1 }}
-          borderRadius={4}
+          style={{ flex: 1, aspectRatio: 1, borderRadius: 4 }}
         />
       )}
       title={hymn?.title ?? ''}

@@ -6,16 +6,10 @@ import { useVisual } from '@/hooks/visuals/visual'
 import { Current } from '@/lib/audio/current'
 import { Playlists } from '@/lib/audio/playlists'
 import { Playlist } from '@/lib/audio/types'
+import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
-import {
-  Alert,
-  Dimensions,
-  Image,
-  ScaledSize,
-  ScrollView,
-  View,
-} from 'react-native'
+import { Alert, Dimensions, ScaledSize, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LoopButton } from '../audio/loop-button'
 import { PlayPauseButton } from '../audio/play-button'
@@ -149,10 +143,12 @@ export function PlaylistViewer({ playlist }: PlaylistViewerProps) {
           }}>
           <Image
             source={{ uri: visual?.url }}
-            style={{ aspectRatio: 1 }}
-            width={cardPadd}
-            height={cardPadd}
-            borderRadius={cardPadd / 16}
+            style={{
+              aspectRatio: 1,
+              width: cardPadd,
+              height: cardPadd,
+              borderRadius: cardPadd / 16,
+            }}
           />
         </View>
         <View

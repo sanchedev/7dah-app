@@ -12,14 +12,14 @@ export class Categories {
     return categories.slice()
   }
 
-  static get(categoryId: string) {
+  static async get(categoryId: string) {
     const c = categoriesMap.get(categoryId)
     if (c != null) return c
 
     const categoryJson = categories.find((c) => c.id === categoryId)
     if (categoryJson == null) return
 
-    const visual = Visuals.getId(categoryJson.visualId)!
+    const visual = await Visuals.getId(categoryJson.visualId)!
     if (visual == null) return
 
     const category: Category = {

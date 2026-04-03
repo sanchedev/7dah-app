@@ -1,8 +1,9 @@
 import { UiText } from '@/components/ui/text'
 import { useVisualFromHymnId } from '@/hooks/visuals/visual'
 import { Hymn } from '@/lib/hymns/types'
+import { Image } from 'expo-image'
 import { useEffect, useState } from 'react'
-import { Dimensions, Image, ScaledSize, View } from 'react-native'
+import { Dimensions, ScaledSize, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface HeaderPlayerProps {
@@ -39,10 +40,12 @@ export function HeaderPlayer({ hymn }: HeaderPlayerProps) {
         }}>
         <Image
           source={{ uri: visual?.url }}
-          style={{ aspectRatio: 1 }}
-          width={cardPadd}
-          height={cardPadd}
-          borderRadius={cardPadd / 16}
+          style={{
+            aspectRatio: 1,
+            width: cardPadd,
+            height: cardPadd,
+            borderRadius: cardPadd / 16,
+          }}
         />
       </View>
       <View

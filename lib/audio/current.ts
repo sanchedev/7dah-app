@@ -44,15 +44,16 @@ export class Current {
       if (indexToChange === -1) {
         PlayerManager.player.clearLockScreenControls()
       } else if (index === -1) {
-        PlayerManager.player.setActiveForLockScreen(
-          true,
-          getHymnMetadata(hymnList[indexToChange]),
-          { showSeekBackward: true, showSeekForward: true },
-        )
+        getHymnMetadata(hymnList[indexToChange]).then((m) => {
+          PlayerManager.player.setActiveForLockScreen(true, m, {
+            showSeekBackward: true,
+            showSeekForward: true,
+          })
+        })
       } else {
-        PlayerManager.player.updateLockScreenMetadata(
-          getHymnMetadata(hymnList[indexToChange]),
-        )
+        getHymnMetadata(hymnList[indexToChange]).then((m) => {
+          PlayerManager.player.updateLockScreenMetadata(m)
+        })
       }
 
       index = indexToChange
@@ -109,9 +110,9 @@ export class Current {
   }
 }
 
-function getHymnMetadata(hymnId: string): AudioMetadata {
+async function getHymnMetadata(hymnId: string): Promise<AudioMetadata> {
   const hymn = Hymns.get(hymnId)!
-  const visual = Visuals.getFromHymnId(hymn.id)
+  const visual = await Visuals.getFromHymnId(hymn.id)
 
   return {
     title: 'Himno #' + hymnId.toUpperCase() + ' - ' + hymn.title,

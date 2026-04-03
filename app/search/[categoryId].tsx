@@ -1,20 +1,19 @@
 import { CategoryView } from '@/components/category/category-view'
-import { Categories } from '@/lib/categories/categories'
-import { router, useLocalSearchParams } from 'expo-router'
+import { useCategory } from '@/hooks/categories/category'
+import { useColors } from '@/hooks/colors'
+import { useLocalSearchParams } from 'expo-router'
+import { View } from 'react-native'
 
 export default function CategoryScreen() {
   const { categoryId } = useLocalSearchParams()
+  const colors = useColors()
 
-  if (typeof categoryId !== 'string') {
-    router.replace('/')
-    return null
-  }
-
-  const category = Categories.get(categoryId)
+  const category = useCategory(
+    typeof categoryId !== 'string' ? undefined : categoryId,
+  )
 
   if (category == null) {
-    router.replace('/')
-    return null
+    return <View style={{ flex: 1, backgroundColor: colors.background }} />
   }
 
   return <CategoryView category={category} />

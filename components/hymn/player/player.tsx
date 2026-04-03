@@ -27,7 +27,7 @@ interface HymnPlayerProps {
 }
 
 export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
-  const visual = useVisualFromHymnId(hymn.id)!
+  const visual = useVisualFromHymnId(hymn.id)
 
   const insets = useSafeAreaInsets()
 
@@ -85,7 +85,7 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
   })
 
   return (
-    <VisualBackground visualId={visual.id}>
+    <VisualBackground visualId={visual?.id}>
       <Animated.ScrollView
         onScroll={handler}
         style={{

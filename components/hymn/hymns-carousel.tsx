@@ -78,7 +78,7 @@ function HymnCard({
   action?: HymnAction
 }) {
   const hymn = useHymn(hymnId)
-  const visual = useVisualFromHymnId(hymnId)!
+  const visual = useVisualFromHymnId(hymnId)
 
   const colors = useColors()
 
@@ -101,7 +101,7 @@ function HymnCard({
             },
           ]}>
           <Image
-            source={{ uri: visual.url }}
+            source={{ uri: visual?.url }}
             style={{ width: size, height: size }}
             width={size}
             height={size}

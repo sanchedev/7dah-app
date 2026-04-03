@@ -11,14 +11,14 @@ export class Visuals {
     return visuals.map((v) => v.id)
   }
 
-  static getId(visualId: string): Visual | undefined {
+  static async getId(visualId: string): Promise<Visual | undefined> {
     const visual = visuals.find((v) => v.id === visualId)
 
     if (visual == null) return
 
     return this.#processVisual(visual)
   }
-  static getFromHymnId(hymnId: string): Visual | undefined {
+  static async getFromHymnId(hymnId: string): Promise<Visual | undefined> {
     const hymn = Hymns.get(hymnId)
 
     if (hymn == null) return
@@ -32,19 +32,15 @@ export class Visuals {
     return this.#processVisual(visual)
   }
 
-  static #processVisual(semiVisual: Omit<Visual, 'url'>) {
-    const url = cachedVisuals.get(semiVisual.id)
-
-    if (url == null) {
-      downloadVisual(semiVisual.id, true).then(
-        (uri) => uri && cachedVisuals.set(semiVisual.id, uri),
-      )
-    }
+  static async #processVisual(semiVisual: Omit<Visual, 'url'>) {
+    let url =
+      cachedVisuals.get(semiVisual.id) ??
+      (await downloadVisual(semiVisual.id, true)) ??
+      `https://7dah.vercel.app/visuals/visual-${semiVisual.id}.webp`
 
     const visual: Visual = {
       ...semiVisual,
-      url:
-        url ?? `https://7dah.vercel.app/visuals/visual-${semiVisual.id}.webp`,
+      url,
     }
 
     return visual
@@ -58,9 +54,14 @@ async function downloadVisual(visualId: string, download: boolean) {
   loading.add(visualId)
   const url = `https://7dah.vercel.app/visuals/visual-${visualId}.webp`
 
-  if (!download) {
+  const finish = (uri: string, downloaded = true) => {
     loading.delete(visualId)
-    return url
+    if (downloaded) cachedVisuals.set(visualId, uri)
+    return uri
+  }
+
+  if (!download) {
+    return finish(url, false)
   }
 
   const destination = new Directory(Paths.cache, 'visuals')
@@ -76,8 +77,7 @@ async function downloadVisual(visualId: string, download: boolean) {
         file.creationTime != null &&
         file.creationTime <= 1000 * 60 * 60 * 24 * 15
       ) {
-        loading.delete(visualId)
-        return file.uri
+        return finish(file.uri)
       }
 
       file.delete()
@@ -85,8 +85,7 @@ async function downloadVisual(visualId: string, download: boolean) {
 
     const output = await File.downloadFileAsync(url, file, { idempotent: true })
 
-    loading.delete(visualId)
-    return output.uri
+    return finish(output.uri)
   } catch (error) {
     console.error(error)
   }

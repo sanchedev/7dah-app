@@ -1,19 +1,24 @@
+import { Visual } from '@/lib/visuals/types'
 import { Visuals } from '@/lib/visuals/visuals'
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 
 export function useVisual(id: string | undefined) {
-  const visual = useMemo(() => {
+  const [visual, setVisual] = useState<Visual>()
+
+  useEffect(() => {
     if (id == null) return
-    return Visuals.getId(id)
+    Visuals.getId(id).then(setVisual)
   }, [id])
 
   return visual
 }
 
 export function useVisualFromHymnId(hymnId: string | undefined) {
-  const visual = useMemo(() => {
+  const [visual, setVisual] = useState<Visual>()
+
+  useEffect(() => {
     if (hymnId == null) return
-    return Visuals.getFromHymnId(hymnId)
+    Visuals.getFromHymnId(hymnId).then(setVisual)
   }, [hymnId])
 
   return visual

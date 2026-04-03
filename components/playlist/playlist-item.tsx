@@ -1,7 +1,7 @@
 import { useVisual } from '@/hooks/visuals/visual'
 import { Playlist } from '@/lib/audio/types'
+import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
-import { Image } from 'react-native'
 import { ListItem, ListItemProps } from '../ui/list-item'
 
 interface PlaylistItemProps extends Omit<
@@ -25,8 +25,7 @@ export function PlaylistItem({
       leadingComp={() => (
         <Image
           source={{ uri: visual?.url }}
-          style={{ flex: 1, aspectRatio: 1 }}
-          borderRadius={4}
+          style={{ flex: 1, aspectRatio: 1, borderRadius: 4 }}
         />
       )}
       title={playlist.name}
