@@ -1,10 +1,7 @@
 import { usePlaylist } from '@/hooks/audio/playlist'
 import { useColors } from '@/hooks/colors'
 import { useVisualFromHymnId } from '@/hooks/visuals/visual'
-import { Current } from '@/lib/audio/current'
-import { goToHymn } from '@/lib/hymns/link'
 import { Hymn } from '@/lib/hymns/types'
-import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
   Extrapolation,
@@ -33,32 +30,32 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
 
   const colors = useColors()
 
-  const lastIndex = useRef(Current.getIndex())
+  // const lastIndex = useRef(Current.getIndex())
 
-  useEffect(() => {
-    const handleIndexChange = (index: number) => {
-      const currentHymnId = Current.getHymnId()
+  // useEffect(() => {
+  //   const handleIndexChange = (index: number) => {
+  //     const currentHymnId = Current.getHymnId()
 
-      if (currentHymnId != null) {
-        if (
-          !Current.isCurrent({
-            index: Current.indexOf(hymn.id, playlistId ?? null),
-            playlistId: playlistId ?? null,
-          })
-        ) {
-          goToHymn(currentHymnId, playlistId, { replace: true })
-        }
-      }
+  //     if (currentHymnId != null) {
+  //       if (
+  //         !Current.isCurrent({
+  //           index: Current.indexOf(hymn.id, playlistId ?? null),
+  //           playlistId: playlistId ?? null,
+  //         })
+  //       ) {
+  //         goToHymn(currentHymnId, playlistId, { replace: true })
+  //       }
+  //     }
 
-      lastIndex.current = index
-    }
+  //     lastIndex.current = index
+  //   }
 
-    Current.indexChanged.on(handleIndexChange)
+  //   Current.indexChanged.on(handleIndexChange)
 
-    return () => {
-      Current.indexChanged.off(handleIndexChange)
-    }
-  }, [hymn, playlistId])
+  //   return () => {
+  //     Current.indexChanged.off(handleIndexChange)
+  //   }
+  // }, [hymn, playlistId])
 
   const playlist = usePlaylist(playlistId ?? null)
 

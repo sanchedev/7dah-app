@@ -15,19 +15,19 @@ export function goToHymn(
     },
   }
 
-  if (options.replace) {
-    requestAnimationFrame(() => {
-      try {
-        // @ts-ignore
-        router.replace(href)
-      } catch (error) {
-        console.error('Failed to replace route:', error)
-        // @ts-ignore
-        router.navigate(href)
-      }
-    })
-  } else {
-    // @ts-ignore
-    router.navigate(href)
-  }
+  // if (options.replace) {
+  //   requestAnimationFrame(() => {
+  //     try {
+  //       // @ts-ignore
+  //       router.replace(href)
+  //     } catch (error) {
+  //       console.error('Failed to replace route:', error)
+  //       // @ts-ignore
+  //       router.navigate(href)
+  //     }
+  //   })
+  // } else {
+  // @ts-ignore
+  router.navigate(href)
+  // }
 }
