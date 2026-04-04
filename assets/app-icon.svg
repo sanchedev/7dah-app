@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 36 36" width="1024" height="1024" color="#e5e7eb">
+  <rect x="3" y="17" width="19" height="5" fill="#f3f4f6" />
+  <path d="M8 0Q0 0 0 8v8q0 8 8 8h8q8 0 8-8V8q0-8-8-8H12ZM7 19H16Q21 19 22 17 22 22 16 22H6Q3 22 3 20 3 19 6 19"
+    fill="#1f2937" />
+  <!-- <path d="M12 13.25c.3.9-.3 2.2-2.2 2.9s-3.2 0-3.5-.9.3-2.2 2.2-2.9 3.2 0 3.5.9z" fill="currentColor" />
+  <path
+    d="M12 13.25l-2.3-8.7c-.3-1-1.2-.7-1 .3l2.3 8.7zm-1.25-8c1-3 4 0 5-3 1 4-4 1-5 3zm.9 3c1-3 4 0 5.5-3 .75 4-4 1-5.5 3zm.8 3c1-3 4 0 6-3 .75 4-4 1-6 3z"
+    fill="currentColor" /> -->
+</svg>

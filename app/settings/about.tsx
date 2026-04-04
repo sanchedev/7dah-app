@@ -28,7 +28,7 @@ function ScrollComponent(props: ScrollComponentProps) {
       data={[
         {
           leadingComp: () => <Icon name='code' />,
-          title: 'Versión 1.3.0',
+          title: 'Versión 1.3.1',
         },
       ]}
       keyExtractor={({ title }) => title}
