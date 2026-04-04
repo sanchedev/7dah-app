@@ -4,7 +4,6 @@ import {
   NavBarContainer,
   ScrollComponentProps,
 } from '@/components/nav-bar-container'
-import { IconButton } from '@/components/ui/icon-button'
 import { UiText } from '@/components/ui/text'
 import { useFavorites } from '@/hooks/audio/favorites'
 import { useHistory } from '@/hooks/audio/history'
@@ -12,18 +11,11 @@ import { usePlaylists } from '@/hooks/audio/playlists'
 import { useColors } from '@/hooks/colors'
 import { Categories } from '@/lib/categories/categories'
 import { FlashList } from '@shopify/flash-list'
-import { router } from 'expo-router'
 import React from 'react'
 import Animated from 'react-native-reanimated'
 
 export default function Screen() {
-  return (
-    <NavBarContainer
-      title='7dAH App'
-      ScrollComponent={ScrollComponent}
-      ActionComponent={ActionComponent}
-    />
-  )
+  return <NavBarContainer title='7dAH App' ScrollComponent={ScrollComponent} />
 }
 
 function ScrollComponent(props: ScrollComponentProps) {
@@ -167,8 +159,4 @@ function CategoryCarousel() {
       )}
     />
   )
-}
-
-function ActionComponent() {
-  return <IconButton iconName='search' onPress={() => router.push('/search')} />
 }

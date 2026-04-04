@@ -1,5 +1,5 @@
 import { useColors } from '@/hooks/colors'
-import { setupPlayer } from '@/lib/audio/setup'
+import { setupPlayer } from '@/lib/setup'
 import { BottomSheetProvider } from '@/providers/bottom-sheet'
 import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'

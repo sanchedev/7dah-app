@@ -1,5 +1,6 @@
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake'
 import { Hymns } from '../hymns/hymns'
+import { Preferences } from '../preferences/preferences'
 import { Signal } from '../signal'
 import { PlayerManager } from './audio-player'
 import { Current, CurrentInfo } from './current'
@@ -90,56 +91,6 @@ export class AudioControllers {
     return PlayerManager.player.currentTime
   }
 
-  static #loop = false
-  static toggleLoop() {
-    console.log('-> AudioControllers.toggleLoop')
-    console.log('Changing loop from ', this.#loop, ' to ', !this.#loop, '...')
-    this.#loop = !this.#loop
-    console.log(':: Emiting `loopChanged` signal...')
-    this.loopChanged.emit(this.#loop)
-
-    if (this.#loop && this.#shuffle) {
-      console.log('Loop and Shuffle are true!')
-      console.log('Toggling Shuffle')
-      this.toggleShuffle()
-    }
-  }
-  static isLoop() {
-    console.log('-> AudioControllers.isLoop')
-    console.log('Getting value...')
-    console.log('Loop is ', this.#loop)
-    console.log('<- End')
-    return this.#loop
-  }
-
-  static #shuffle = false
-  static toggleShuffle() {
-    console.log('-> AudioControllers.toggleShuffle')
-    console.log(
-      'Changing shuffle from ',
-      this.#shuffle,
-      ' to ',
-      !this.#shuffle,
-      '...',
-    )
-    this.#shuffle = !this.#shuffle
-    console.log(':: Emiting `shuffleChanged` signal...')
-    this.shuffleChanged.emit(this.#shuffle)
-
-    if (this.#shuffle && this.#loop) {
-      console.log('Shuffle and Loop are true!')
-      console.log('Toggling Loop')
-      this.toggleLoop()
-    }
-  }
-  static isShuffle() {
-    console.log('-> AudioControllers.isShuffle')
-    console.log('Getting value...')
-    console.log('Shuffle is ', this.#shuffle)
-    console.log('<- End')
-    return this.#shuffle
-  }
-
   static setup() {
     let playing = false
     let currentTime = 0
@@ -198,7 +149,7 @@ export class AudioControllers {
         const playlist = Current.getPlaylist()
         const index = Current.getIndex()
 
-        if (this.#loop) {
+        if (Preferences.getLoop()) {
           console.log('Loop is active')
           if (playlist != null) {
             console.log('Playlist is not null')
@@ -217,7 +168,7 @@ export class AudioControllers {
           }
           console.log('Playing...')
           this.togglePlay()
-        } else if (this.#shuffle) {
+        } else if (Preferences.getShuffle()) {
           console.log('Shuffle is active')
           console.log(
             'Using ' +

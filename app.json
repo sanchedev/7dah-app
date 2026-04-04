@@ -2,7 +2,7 @@
   "expo": {
     "name": "7dAH App",
     "slug": "sdah-app",
-    "version": "1.2.1",
+    "version": "1.3.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "sdah",
@@ -57,7 +57,13 @@
           "enableBackgroundRecording": true
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

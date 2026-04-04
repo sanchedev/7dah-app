@@ -12,13 +12,17 @@ export class Visuals {
   }
 
   static async getId(visualId: string): Promise<Visual | undefined> {
-    const visual = visuals.find((v) => v.id === visualId)
-
-    if (visual == null) return
-
-    return this.#processVisual(visual)
+    return this.#processVisual(visualId)
   }
   static async getFromHymnId(hymnId: string): Promise<Visual | undefined> {
+    const visualId = this.getIdFromHymnId(hymnId)
+
+    if (visualId == null) return
+
+    return this.#processVisual(visualId)
+  }
+
+  static getIdFromHymnId(hymnId: string) {
     const hymn = Hymns.get(hymnId)
 
     if (hymn == null) return
@@ -29,10 +33,14 @@ export class Visuals {
 
     if (visual == null) return
 
-    return this.#processVisual(visual)
+    return visual.id
   }
 
-  static async #processVisual(semiVisual: Omit<Visual, 'url'>) {
+  static async #processVisual(visualId: string) {
+    const semiVisual = visuals.find((v) => v.id === visualId)
+
+    if (semiVisual == null) return
+
     let url =
       cachedVisuals.get(semiVisual.id) ??
       (await downloadVisual(semiVisual.id, true)) ??

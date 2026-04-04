@@ -6,6 +6,8 @@ const KEYS = {
   FAVORITES: 'favorites',
   PLAYLISTS: 'playlists',
   HISTORY: 'history',
+  PREFERENCES: 'preferences',
+  NOTIFICATIONS: 'notifications',
 }
 
 const hymnIdSchema = z.string().refine(async (str) => Hymns.has(str))
@@ -61,6 +63,53 @@ export async function getHistory(): Promise<HistoryType> {
       JSON.parse(data ?? ''),
     )
     return history ?? []
+  } catch {
+    return []
+  }
+}
+
+export type PreferencesType = z.infer<typeof preferencesSchema>
+
+const preferencesSchema = z.object({
+  loop: z.boolean().optional(),
+  shuffle: z.boolean().optional(),
+})
+
+export async function savePreferences(preferences: PreferencesType) {
+  await AsyncStorage.setItem(KEYS.PREFERENCES, JSON.stringify(preferences))
+}
+
+export async function getPreferences(): Promise<PreferencesType> {
+  try {
+    const data = await AsyncStorage.getItem(KEYS.PREFERENCES)
+    const { data: preferences } = await preferencesSchema.safeParseAsync(
+      JSON.parse(data ?? ''),
+    )
+    return preferences ?? {}
+  } catch {
+    return {}
+  }
+}
+
+type NotificationsType = z.infer<typeof notificationsSchema>
+
+const notificationSchema = z.object({
+  notificationId: z.string(),
+  listId: z.string(),
+})
+const notificationsSchema = z.array(notificationSchema)
+
+export async function saveNotifications(notifications: NotificationsType) {
+  await AsyncStorage.setItem(KEYS.NOTIFICATIONS, JSON.stringify(notifications))
+}
+
+export async function getNotifications(): Promise<NotificationsType> {
+  try {
+    const data = await AsyncStorage.getItem(KEYS.NOTIFICATIONS)
+    const { data: notifications } = await notificationsSchema.safeParseAsync(
+      JSON.parse(data ?? ''),
+    )
+    return notifications ?? []
   } catch {
     return []
   }

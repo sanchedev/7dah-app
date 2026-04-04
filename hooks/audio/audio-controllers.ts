@@ -1,4 +1,5 @@
 import { AudioControllers } from '@/lib/audio/audio-controllers'
+import { Preferences } from '@/lib/preferences/preferences'
 import { useSignalState } from '../signal'
 
 export function usePlaying() {
@@ -20,18 +21,15 @@ export function useCurrentTime() {
 }
 
 export function useLoop() {
-  const [loop] = useSignalState(
-    AudioControllers.loopChanged,
-    AudioControllers.isLoop(),
-  )
+  const [loop] = useSignalState(Preferences.loopChanged, Preferences.getLoop())
 
   return loop
 }
 
 export function useShuffle() {
   const [shuffle] = useSignalState(
-    AudioControllers.shuffleChanged,
-    AudioControllers.isShuffle(),
+    Preferences.shuffleChanged,
+    Preferences.getShuffle(),
   )
 
   return shuffle

@@ -1,5 +1,5 @@
 import { useLoop } from '@/hooks/audio/audio-controllers'
-import { AudioControllers } from '@/lib/audio/audio-controllers'
+import { Preferences } from '@/lib/preferences/preferences'
 import {
   ToggleIconButton,
   ToggleIconButtonProps,
@@ -17,7 +17,7 @@ export function LoopButton({ ...props }: LoopButtonProps) {
     <ToggleIconButton
       iconName='loop'
       active={loop}
-      toggle={() => AudioControllers.toggleLoop()}
+      toggle={() => Preferences.toggleLoop()}
       {...props}
     />
   )

@@ -20,6 +20,7 @@ interface NavBarContainerProps {
 
   title: string
   ActionComponent?: () => React.ReactNode
+  trailingComponent?: () => React.ReactNode
 }
 
 export type ScrollComponentProps = {
@@ -31,6 +32,7 @@ export function NavBarContainer({
   ScrollComponent,
   title,
   ActionComponent,
+  trailingComponent: Trailing,
 }: NavBarContainerProps) {
   const colors = useColors()
   const insets = useSafeAreaInsets()
@@ -106,11 +108,11 @@ export function NavBarContainer({
             {
               width: '100%',
               flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
             },
           ]}>
-          <UiText style={{ fontSize: 18, fontFamily: 'RosarioBold' }}>
+          {Trailing && <Trailing />}
+          <UiText style={{ fontSize: 18, fontFamily: 'RosarioBold', flex: 1 }}>
             {title}
           </UiText>
           {ActionComponent && <ActionComponent />}

@@ -1,5 +1,5 @@
 import { useShuffle } from '@/hooks/audio/audio-controllers'
-import { AudioControllers } from '@/lib/audio/audio-controllers'
+import { Preferences } from '@/lib/preferences/preferences'
 import {
   ToggleIconButton,
   ToggleIconButtonProps,
@@ -17,7 +17,7 @@ export function ShuffleButton({ ...props }: ShuffleButtonProps) {
     <ToggleIconButton
       iconName='shuffle'
       active={shuffle}
-      toggle={() => AudioControllers.toggleShuffle()}
+      toggle={() => Preferences.toggleShuffle()}
       {...props}
     />
   )

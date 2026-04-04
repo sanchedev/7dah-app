@@ -76,6 +76,19 @@ export default function TabLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name='settings'
+          options={{
+            title: 'Ajustes',
+            tabBarIcon: ({ focused }) => (
+              <MaterialIcons
+                size={28}
+                name='settings'
+                color={colors.foreground + (focused ? 'ff' : 88)}
+              />
+            ),
+          }}
+        />
       </Tabs>
     </>
   )
