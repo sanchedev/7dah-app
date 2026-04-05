@@ -1,7 +1,6 @@
 import { useColors } from '@/hooks/colors'
 import { useVisual } from '@/hooks/visuals/visual'
 import { Image } from 'expo-image'
-import { useRef } from 'react'
 import { StyleSheet, View, ViewProps } from 'react-native'
 
 interface HymnBackgroundProps extends ViewProps {
@@ -15,7 +14,6 @@ export default function VisualBackground({
 }: HymnBackgroundProps) {
   const visual = useVisual(visualId)
 
-  const targetRef = useRef<View | null>(null)
   const colors = useColors()
 
   return (
