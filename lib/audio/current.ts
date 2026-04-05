@@ -124,7 +124,7 @@ async function getHymnMetadata(hymnId: string): Promise<AudioMetadata> {
 
   return {
     title: 'Himno #' + hymnId.toUpperCase() + ' - ' + hymn.title,
-    artworkUrl: `https://7dah.vercel.app/visuals/visual-${visual?.id ?? '00'}.webp`,
+    artworkUrl: visual?.url,
   }
 }
 
