@@ -34,9 +34,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <BottomSheetProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name='(tab)' options={{ headerShown: false }} />
-        </Stack>
+        <Stack screenOptions={{ headerShown: false }} />
         <StatusBar
           style={colors.theme === 'dark' ? 'light' : 'dark'}
           animated
