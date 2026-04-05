@@ -1,7 +1,10 @@
 import { usePlaylist } from '@/hooks/audio/playlist'
 import { useColors } from '@/hooks/colors'
 import { useVisualFromHymnId } from '@/hooks/visuals/visual'
+import { Current } from '@/lib/audio/current'
+import { goToHymn } from '@/lib/hymns/link'
 import { Hymn } from '@/lib/hymns/types'
+import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
   Extrapolation,
@@ -30,32 +33,44 @@ export default function HymnPlayer({ hymn, playlistId }: HymnPlayerProps) {
 
   const colors = useColors()
 
-  // const lastIndex = useRef(Current.getIndex())
+  const lastCurrent = useRef({
+    index: Current.getIndex(),
+    playlistId: Current.getPlaylistId(),
+  })
 
-  // useEffect(() => {
-  //   const handleIndexChange = (index: number) => {
-  //     const currentHymnId = Current.getHymnId()
+  useEffect(() => {
+    const handleCurrentChange = (
+      currentIndex: number,
+      currentPlaylistId: string | null,
+    ) => {
+      const index = Current.indexOf(hymn.id, playlistId ?? null)
+      const currentHymnId = Current.getHymnId()
 
-  //     if (currentHymnId != null) {
-  //       if (
-  //         !Current.isCurrent({
-  //           index: Current.indexOf(hymn.id, playlistId ?? null),
-  //           playlistId: playlistId ?? null,
-  //         })
-  //       ) {
-  //         goToHymn(currentHymnId, playlistId, { replace: true })
-  //       }
-  //     }
+      if (currentHymnId != null) {
+        if (
+          lastCurrent.current.index === index &&
+          lastCurrent.current.playlistId === currentPlaylistId &&
+          !Current.isCurrent({
+            index: Current.indexOf(hymn.id, playlistId ?? null),
+            playlistId: playlistId ?? null,
+          })
+        ) {
+          goToHymn(currentHymnId, playlistId, { replace: true })
+        }
+      }
 
-  //     lastIndex.current = index
-  //   }
+      lastCurrent.current = {
+        index: currentIndex,
+        playlistId: currentPlaylistId,
+      }
+    }
 
-  //   Current.indexChanged.on(handleIndexChange)
+    Current.currentChanged.on(handleCurrentChange)
 
-  //   return () => {
-  //     Current.indexChanged.off(handleIndexChange)
-  //   }
-  // }, [hymn, playlistId])
+    return () => {
+      Current.currentChanged.off(handleCurrentChange)
+    }
+  }, [hymn, playlistId])
 
   const playlist = usePlaylist(playlistId ?? null)
 

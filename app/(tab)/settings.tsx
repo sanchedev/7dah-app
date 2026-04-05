@@ -3,7 +3,11 @@ import {
   ScrollComponentProps,
 } from '@/components/nav-bar-container'
 import { Icon } from '@/components/ui/icon'
-import { ListItem, ListItemProps } from '@/components/ui/list-item'
+import {
+  ItemSeparator,
+  ListItem,
+  ListItemProps,
+} from '@/components/ui/list-item'
 import { Notifications } from '@/lib/notifications/notifications'
 import { router } from 'expo-router'
 import Animated from 'react-native-reanimated'
@@ -39,7 +43,12 @@ function ScrollComponent(props: ScrollComponentProps) {
         },
       ]}
       keyExtractor={({ title }) => title}
-      renderItem={({ item }) => <ListItem {...item} />}
+      renderItem={({ item, index }) => (
+        <>
+          {index !== 0 && <ItemSeparator />}
+          <ListItem {...item} />
+        </>
+      )}
     />
   )
 }

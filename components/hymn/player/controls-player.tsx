@@ -107,7 +107,7 @@ function SkipPrevBtn({ hymn, playlist }: ControlsPlayerProps) {
     const index = Current.indexOf(hymn.id)
     if (index < 1) return
 
-    Current.setIndex(index - 1)
+    Current.skip(index - 1)
     AudioControllers.togglePlay()
   }
 
@@ -131,7 +131,7 @@ function SkipNextBtn({ hymn, playlist }: ControlsPlayerProps) {
     const index = Current.indexOf(hymn.id)
     if (index >= Current.getHymnList().length - 1) return
 
-    Current.setIndex(index + 1)
+    Current.skip(index + 1)
     AudioControllers.togglePlay()
   }
 

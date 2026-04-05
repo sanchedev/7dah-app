@@ -41,10 +41,11 @@ function ScrollComponent({ scrollHandler, style }: ScrollComponentProps) {
         subtitle={`${favorites.length} Himno(s)`}
         onPress={() => router.push('/playlists/favorites')}
       />
+      <ItemSeparator />
       {playlists.map((playlist, i) => (
         <Fragment key={playlist.id}>
-          {i < playlists.length && <ItemSeparator />}
           <PlaylistItem playlist={playlist} />
+          {i < playlists.length && <ItemSeparator />}
         </Fragment>
       ))}
       <ListItem

@@ -89,7 +89,13 @@ export class Notifications {
 
     const { status } = await requestPermissionsAsync()
 
-    return status === PermissionStatus.GRANTED
+    const allowed = status === PermissionStatus.GRANTED
+
+    if (allowed) {
+      await this.#setupNotif()
+    }
+
+    return allowed
   }
 
   static async #getPermission() {
@@ -111,6 +117,13 @@ export class Notifications {
       importance: AndroidImportance.DEFAULT,
     })
 
+    if ((await this.#getPermission()).status !== PermissionStatus.GRANTED)
+      return
+
+    await this.#setupNotif()
+  }
+
+  static async #setupNotif() {
     const notifSaved = await getNotifications()
     const allNotif = await getAllScheduledNotificationsAsync()
 

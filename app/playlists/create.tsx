@@ -8,7 +8,7 @@ import { Playlists } from '@/lib/audio/playlists'
 import { Visuals } from '@/lib/visuals/visuals'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dimensions,
   Pressable,
@@ -33,19 +33,23 @@ export default function CreatePlaylistScreen() {
   const [visualIndex, setVisualIndex] = useState(0)
   const visual = useVisual(visuals[visualIndex])
 
-  const targetRef = useRef<View | null>(null)
-
   const [name, setName] = useState('')
 
   const handleCreate = () => {
     if (visual == null) return
 
-    Playlists.add({
+    const { id: playlistId } = Playlists.add({
       name,
       visualId: visual?.id,
       hymns: [],
     })
-    router.back()
+
+    router.replace({
+      pathname: '/playlists/[playlistId]',
+      params: {
+        playlistId,
+      },
+    })
   }
 
   return (

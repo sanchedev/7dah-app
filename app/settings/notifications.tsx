@@ -4,7 +4,7 @@ import {
 } from '@/components/nav-bar-container'
 import { IconButton } from '@/components/ui/icon-button'
 import { ListItem, ListItemProps } from '@/components/ui/list-item'
-import { VisualImage } from '@/components/visuals/visual'
+import { VisualImage } from '@/components/visuals/visual-image'
 import { useNotifications } from '@/hooks/notifications/notification'
 import { notificationLists } from '@/lib/notifications/lists'
 import { Notifications } from '@/lib/notifications/notifications'

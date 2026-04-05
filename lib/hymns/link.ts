@@ -6,13 +6,20 @@ export function goToHymn(
   options: { replace?: boolean } = {},
 ) {
   const href = {
-    pathname:
-      '/hymns/[hymnId]' +
-      (playlistId != null ? '?playlistId=[playlistId]' : ''),
+    pathname: '/hymns/[hymnId]?playlistId=[playlistId]',
     params: {
       hymnId,
-      playlistId,
+      playlistId: playlistId ?? 'null',
     },
+  }
+
+  if (options.replace) {
+    router.setParams({
+      hymnId,
+      playlistId,
+    })
+
+    return
   }
 
   // if (options.replace) {

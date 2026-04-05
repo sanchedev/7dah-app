@@ -1,5 +1,6 @@
 import HymnPlayer from '@/components/hymn/player/player'
 import { useHymn } from '@/hooks/hymn/hymn'
+import { Playlists } from '@/lib/audio/playlists'
 import { router, useLocalSearchParams } from 'expo-router'
 
 export default function HymnScreen() {
@@ -15,5 +16,10 @@ export default function HymnScreen() {
     return null
   }
 
-  return <HymnPlayer hymn={hymn} playlistId={playlistId} />
+  return (
+    <HymnPlayer
+      hymn={hymn}
+      playlistId={Playlists.has(playlistId ?? 'null') ? playlistId : undefined}
+    />
+  )
 }

@@ -2,6 +2,7 @@ import { setAudioModeAsync } from 'expo-audio'
 import { AudioControllers } from './audio/audio-controllers'
 import { PlayerManager } from './audio/audio-player'
 import { Current } from './audio/current'
+import { Favorites } from './audio/favorites'
 import { History } from './audio/history'
 import { Playlists } from './audio/playlists'
 import { Notifications } from './notifications/notifications'
@@ -18,6 +19,7 @@ export async function setupPlayer() {
 
   await Promise.all([
     History.setup(),
+    Favorites.setup(),
     AudioControllers.setup(),
     Notifications.setup(),
     Preferences.setup(),

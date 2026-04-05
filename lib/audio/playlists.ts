@@ -30,6 +30,10 @@ export class Playlists {
     playlists.set(newPlaylist.id, newPlaylist)
   }
 
+  static has(id: string): boolean {
+    return playlists.has(id)
+  }
+
   static get(id: string): Playlist | undefined {
     return playlists.get(id)
   }

@@ -3,21 +3,32 @@ import { useEffect, useState } from 'react'
 import { useSignalState } from '../signal'
 
 export function useCurrent() {
-  const [index, hymnId] = useSignalState(
-    Current.indexChanged,
+  const [index, playlistId] = useSignalState(
+    Current.currentChanged,
     Current.getIndex(),
-    Current.getHymnId(),
+    Current.getPlaylistId(),
   )
-  const [playlist] = useSignalState(
-    Current.playlistChanged,
-    Current.getPlaylist(),
-    Current.getHymnList(),
-  )
+
+  const [hymnId, setHymnId] = useState(() => Current.getHymnId())
+  const [playlist, setPlaylist] = useState(() => Current.getPlaylist())
+
+  useEffect(() => {
+    const handleChange = () => {
+      setHymnId(Current.getHymnId())
+      setPlaylist(Current.getPlaylist())
+    }
+
+    Current.currentChanged.on(handleChange)
+
+    return () => {
+      Current.currentChanged.off(handleChange)
+    }
+  }, [])
 
   return {
     index,
     hymnId,
-    playlistId: playlist?.id ?? null,
+    playlistId,
     playlist,
   }
 }
@@ -30,16 +41,16 @@ export function useIsCurrent(info?: CurrentInfo) {
   useEffect(() => {
     if (info == null) return
 
+    setIsCurrent(Current.isCurrent(info))
+
     const handleChange = () => {
       setIsCurrent(Current.isCurrent(info))
     }
 
-    Current.indexChanged.on(handleChange)
-    Current.playlistChanged.on(handleChange)
+    Current.currentChanged.on(handleChange)
 
     return () => {
-      Current.indexChanged.on(handleChange)
-      Current.playlistChanged.on(handleChange)
+      Current.currentChanged.off(handleChange)
     }
   }, [info])
 

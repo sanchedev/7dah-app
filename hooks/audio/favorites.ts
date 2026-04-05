@@ -7,5 +7,7 @@ export function useFavorites() {
     Favorites.get(),
   )
 
+  console.log(favorites)
+
   return favorites
 }

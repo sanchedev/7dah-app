@@ -12,8 +12,8 @@ export class Favorites {
   }
 
   static #change() {
-    const fav = this.get()
-    this.favoritesChanged.emit(fav)
+    // const fav = this.get()
+    // this.favoritesChanged.emit(fav)
   }
 
   static get(): string[] {
@@ -38,5 +38,14 @@ export class Favorites {
 
   static toggle(hymnId: string) {
     if (!this.add(hymnId)) this.delete(hymnId)
+  }
+
+  static async setup() {
+    Playlists.playlistEdited.on((playlist) => {
+      if (playlist == null) return
+      if (playlist.id !== 'favorites') return
+
+      this.favoritesChanged.emit(playlist.hymns)
+    })
   }
 }

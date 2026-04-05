@@ -14,6 +14,17 @@ export class Hymns {
     return Array.from(hymnsMap.keys())
   }
 
+  static getRandoms(count: number) {
+    const hymns = this.getAllIds()
+    const randoms: string[] = []
+
+    for (let i = 0; i < count; i++) {
+      randoms.push(hymns.splice(Math.floor(Math.random() * hymns.length), 1)[0])
+    }
+
+    return randoms
+  }
+
   static get(id: string) {
     return hymnsMap.get(id)
   }
@@ -41,7 +52,6 @@ export class Hymns {
     const result = hymns.flatMap((h) =>
       from <= h.number && h.number <= to ? h.id : [],
     )
-    console.log(result)
     return result
   }
 
