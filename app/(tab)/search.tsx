@@ -15,7 +15,7 @@ export default function Screen() {
     <NavBarContainer
       title='Buscar'
       ScrollComponent={ScrollComponent}
-      ActionComponent={ActionComponent}
+      leadingComponent={ActionComponent}
     />
   )
 }

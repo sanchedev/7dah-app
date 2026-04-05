@@ -17,7 +17,7 @@ export default function ListsScreen() {
     <NavBarContainer
       title='Listas'
       ScrollComponent={ScrollComponent}
-      ActionComponent={ActionComponent}
+      leadingComponent={ActionComponent}
     />
   )
 }
