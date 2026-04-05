@@ -1,4 +1,5 @@
 import { useColors } from '@/hooks/colors'
+import { Component } from '@/lib/types'
 import { BlurTargetView, BlurView } from 'expo-blur'
 import React, { useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
@@ -16,11 +17,12 @@ import { UiText } from './ui/text'
 const NAV_HEIGHT = 72
 
 interface NavBarContainerProps {
-  ScrollComponent: (props: ScrollComponentProps) => React.ReactNode
+  backgroundOpaque?: boolean
+  ScrollComponent: Component<ScrollComponentProps>
 
   title: string
-  ActionComponent?: () => React.ReactNode
-  trailingComponent?: () => React.ReactNode
+  leadingComponent?: Component<{}>
+  trailingComponent?: Component<{}>
 }
 
 export type ScrollComponentProps = {
@@ -29,9 +31,10 @@ export type ScrollComponentProps = {
 }
 
 export function NavBarContainer({
+  backgroundOpaque = true,
   ScrollComponent,
   title,
-  ActionComponent,
+  leadingComponent: ActionComponent,
   trailingComponent: Trailing,
 }: NavBarContainerProps) {
   const colors = useColors()
@@ -63,7 +66,11 @@ export function NavBarContainer({
   const targetRef = useRef<View | null>(null)
 
   return (
-    <View style={{ backgroundColor: colors.background, flex: 1 }}>
+    <View
+      style={[
+        { flex: 1 },
+        backgroundOpaque && { backgroundColor: colors.background },
+      ]}>
       <BlurTargetView ref={targetRef} style={{ flex: 1 }}>
         <ScrollComponent
           scrollHandler={handler}

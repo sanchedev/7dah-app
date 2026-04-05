@@ -4,7 +4,6 @@ import {
   ScrollComponentProps,
 } from '@/components/nav-bar-container'
 import { IconButton } from '@/components/ui/icon-button'
-import { useColors } from '@/hooks/colors'
 import { Categories } from '@/lib/categories/categories'
 import { router } from 'expo-router'
 import React, { Fragment } from 'react'
@@ -22,7 +21,6 @@ export default function Screen() {
 }
 
 function ScrollComponent(props: ScrollComponentProps) {
-  const colors = useColors()
   const categories = Categories.getAll()
   const size = useWindowDimensions()
 
@@ -42,7 +40,6 @@ function ScrollComponent(props: ScrollComponentProps) {
       contentContainerStyle={[
         props.style,
         {
-          backgroundColor: colors.background,
           gap: 16,
         },
       ]}

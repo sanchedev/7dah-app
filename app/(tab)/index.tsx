@@ -6,7 +6,6 @@ import {
   NavBarContainer,
   ScrollComponentProps,
 } from '@/components/nav-bar-container'
-import { useColors } from '@/hooks/colors'
 import React from 'react'
 import Animated from 'react-native-reanimated'
 
@@ -15,14 +14,11 @@ export default function Screen() {
 }
 
 function ScrollComponent(props: ScrollComponentProps) {
-  const colors = useColors()
-
   return (
     <Animated.ScrollView
       contentContainerStyle={[
         props.style,
         {
-          backgroundColor: colors.background,
           paddingBottom: 128,
           gap: 16,
         },
