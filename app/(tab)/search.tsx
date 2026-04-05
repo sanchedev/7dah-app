@@ -51,7 +51,7 @@ function ScrollComponent(props: ScrollComponentProps) {
       {sliced.map((cats) => (
         <View
           key={cats[0].id + 'container'}
-          style={{ flexDirection: 'row', gap: 16 }}>
+          style={{ flexDirection: 'row', justifyContent: 'center', gap: 16 }}>
           {cats.map((cat) => (
             <Fragment key={cat.id + 'nested'}>
               {cat == null ? (
